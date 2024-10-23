@@ -8,7 +8,7 @@ x = np.cos(t)
 y = np.sin(t)
 boundary = np.vstack((x, y)).T
 """
-boundary = GetVertex("selection/apple-2.gif")
+boundary = GetVertex("./selection/apple-2.gif")
 #print(boundary)
 print(len(boundary))
 original_distances = np.linalg.norm(boundary[1:] - boundary[:-1], axis=1)

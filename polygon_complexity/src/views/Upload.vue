@@ -1,11 +1,14 @@
-<<<<<<< HEAD
 <template>
   <div>
     <h2>Please upload a image file(.jpg, .png, .gif)</h2>
-    <input type="file" @change="handleFileUpload" /> 
-    <button @click="uploadFile" :disabled="!selectedFile">Yes</button>
+    <input type="file" @change="handleFileUpload" multiple/> 
+    <button @click="uploadFile" :disabled="selectedFiles.length ===0">Yes</button>
 
-    <DataVisualization :responseData="responseData" />
+    <ul>
+      <li v-for="(fileName, index) in fileNames" :key="index">{{ fileName }}</li>
+    </ul>
+
+    <DataVisualization :data="responseData" />
   </div>
 </template>
 
@@ -17,8 +20,9 @@ export default {
   name: 'UploadFile',
   data() {
     return {
-      selectedFile: null, 
+      selectedFiles: [], 
       responseData: null, 
+      fileNames:[],
     };
   },
   components: { 
@@ -26,15 +30,26 @@ export default {
   },
   methods: {
     handleFileUpload(event) {
-      this.selectedFile = event.target.files[0]; 
+      const newFiles = Array.from(event.target.files);
+      this.selectedFiles = [...this.selectedFiles, ...newFiles];
+
+      const files = event.target.files;
+      //this.fileNames = [];
+      for (let i = 0; i < files.length; i++) {
+        this.fileNames.push(files[i].name);
+      }
     },
 
     async uploadFile() {
-      if (!this.selectedFile) return;
+      console.log(this.selectedFiles.length);
+      if (this.selectedFiles.length ==0) return;
 
       const formData = new FormData();
-      formData.append('file', this.selectedFile); 
       formData.append('type', 'image');
+
+       this.selectedFiles.forEach((file, index) => {
+        formData.append(`file${index}`, file);  // 用 file0, file1, ... 命名每个文件
+      }); 
 
       try {
         const response = await axios.post('http://localhost:5000/api/complexity', formData, {
@@ -43,9 +58,19 @@ export default {
           },
         });
 
-        this.responseData = response.data;
+        const rawData = response.data.data;
+        console.log(rawData);
+  
+        // 将后端返回的对象转换为数组格式
+        const polygonData = Object.keys(rawData).map(fileName => {
+          return { [fileName]: rawData[fileName] };
+        });
 
-        console.log(response.data);
+        // 将转换后的数据赋值给 this.responseData，以便传递给 DataVisualization 组件
+        this.responseData = polygonData;
+  
+        console.log(this.responseData);
+
       } catch (error) {
         console.error('Failure', error);
       }
@@ -62,68 +87,3 @@ export default {
   background-color: #f9f9f9;
 }
 </style>
-=======
-<template>
-  <div>
-    <h2>Please upload a image file(.jpg, .png, .gif)</h2>
-    <input type="file" @change="handleFileUpload" /> 
-    <button @click="uploadFile" :disabled="!selectedFile">Yes</button>
-
-    <DataVisualization :responseData="responseData" />
-  </div>
-</template>
-
-<script>
-import axios from 'axios';
-import DataVisualization from '../components/DataVisualization.vue';
-
-export default {
-  name: 'UploadFile',
-  data() {
-    return {
-      selectedFile: null, 
-      responseData: null, 
-    };
-  },
-  components: { 
-    DataVisualization,
-  },
-  methods: {
-    handleFileUpload(event) {
-      this.selectedFile = event.target.files[0]; 
-    },
-
-    async uploadFile() {
-      if (!this.selectedFile) return;
-
-      const formData = new FormData();
-      formData.append('file', this.selectedFile); 
-      formData.append('type', 'image');
-
-      try {
-        const response = await axios.post('http://localhost:5000/api/complexity', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data', 
-          },
-        });
-
-        this.responseData = response.data;
-
-        console.log(response.data);
-      } catch (error) {
-        console.error('Failure', error);
-      }
-    },
-  },
-};
-</script>
-
-<style scoped>
-.response-data {
-  margin-top: 20px;
-  padding: 10px;
-  border: 1px solid #42b983;
-  background-color: #f9f9f9;
-}
-</style>
->>>>>>> 9940b710187e10b903004c6d68852d2e6f417ace

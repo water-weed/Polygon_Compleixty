@@ -5,7 +5,7 @@ from PIL import Image
 
 def GetVertex(url):
 # Step 1: 读取图像
-    img = Image.open("selection/device1-2.gif").convert('L')  # 'L' 模式表示灰度图
+    img = Image.open(url).convert('L')  # 'L' 模式表示灰度图
     img = np.array(img)  # 转换为 NumPy 数组，用于 OpenCV 处理
     
     _, img_thresh = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY_INV)
@@ -121,4 +121,4 @@ plt.title('Detected Complex Polygon')
 plt.show()
 """
 
-GetVertex("")
+

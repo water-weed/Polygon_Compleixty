@@ -3,49 +3,73 @@ import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 
-# 读取图像并转换为二值图
-img = Image.open('selection/apple-2.gif').convert('L')  # 读取并转换为灰度图
-img = np.array(img)
-_, binary_img = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY)
-original_area = np.sum(binary_img == 255)
-
-def downsample_area(binary_img, grid_size):
+def scan_convert_image(image_path, padding=16):
     """
-    将二值图像分成 grid_size x grid_size 的网格，计算每个网格内的面积占比
-    :param binary_img: 二值化图像 (形状为白色，背景为黑色)
-    :param grid_size: 网格的大小 (例如 128, 64, 32, 等)
-    :return: 网格化后的面积占比图
+    将图像转换为 256x256 的二值图像并加上 padding.
     """
-    img_h, img_w = binary_img.shape  # 获取图像的宽度和高度
-    h_grid = img_h // grid_size  # 每个网格的高度
-    w_grid = img_w // grid_size  # 每个网格的宽度
+    img = Image.open(image_path).convert('L')  # 转为灰度图
+    img = np.array(img)
+    
+    # 调整图像大小为 256x256，并添加填充
+    img_resized = cv2.resize(img, (256 - 2 * padding, 256 - 2 * padding), interpolation=cv2.INTER_NEAREST)
+    
+    # 在四周添加填充
+    img_padded = np.pad(img_resized, pad_width=padding, mode='constant', constant_values=0)
+    
+    # 二值化处理
+    _, binary_img = cv2.threshold(img_padded, 128, 255, cv2.THRESH_BINARY)
+    
+    return binary_img
 
-    # 创建一个空数组来存储每个网格的面积比例
-    downsampled_area = np.zeros((grid_size, grid_size))
+def downsample_image_with_fixed_grid(binary_img, grid_size, threshold=0.1):
+    """
+    按固定大小的网格（例如 2x2 像素）对图像进行降采样，保持图像大小不变。
+    :param binary_img: 输入二值化图像
+    :param grid_size: 固定网格的大小（每个网格是 grid_size x grid_size 像素）
+    :param threshold: 网格中白色像素比例的阈值
+    :return: 降采样后的图像以及降采样后所占据的面积比
+    """
+    img_h, img_w = binary_img.shape
+    downsampled_img = np.zeros_like(binary_img)
+
+    total_occupied_pixels = 0
 
     # 遍历每个网格
-    for i in range(grid_size):
-        for j in range(grid_size):
-            # 提取该网格的像素区域
-            grid_region = binary_img[i * h_grid:(i + 1) * h_grid, j * w_grid:(j + 1) * w_grid]
-            # 计算网格区域中白色像素的比例 (白色像素 = 255)
-            area_fraction = np.sum(grid_region == 255) / (h_grid * w_grid)
-            downsampled_area[i, j] = area_fraction  # 将该区域的占比存入结果矩阵中
+    for i in range(0, img_h, grid_size):
+        for j in range(0, img_w, grid_size):
+            # 提取当前网格中的像素区域
+            grid_region = binary_img[i:i + grid_size, j:j + grid_size]
 
-    return downsampled_area
+            # 计算该网格中的白色像素比例
+            white_pixel_ratio = np.sum(grid_region == 255) / grid_region.size
 
-# 选择不同的网格分辨率
-grid_sizes = [128, 64, 32, 16]
+            # 如果白色像素比例大于设定阈值，则认为该网格中形状占据
+            if white_pixel_ratio > threshold:
+                downsampled_img[i:i + grid_size, j:j + grid_size] = 255
+                total_occupied_pixels += np.sum(grid_region == 255)  # 计算白色像素数量
 
-# 创建子图展示不同网格分辨率下的面积降采样结果
-fig, axes = plt.subplots(1, len(grid_sizes), figsize=(15, 5))
+    # 计算原始图像的白色像素总数
+    original_occupied_pixels = np.sum(binary_img == 255)
+    
+    # 计算面积比
+    if original_occupied_pixels > 0:
+        area_ratio = total_occupied_pixels / original_occupied_pixels
+    else:
+        area_ratio = 0  # 避免除以零的情况
 
-for idx, grid_size in enumerate(grid_sizes):
-    downsampled_areas = downsample_area(binary_img, grid_size)
-    downsampled_area = np.sum(downsampled_areas) * (binary_img.size / downsampled_areas.size)
-    complexity = 1 - (downsampled_area / original_area)
-    axes[idx].imshow(downsampled_areas, cmap='gray')
-    axes[idx].set_title(f'{grid_size}x{grid_size} Grid')
-    print(f"{idx}:complexity:{complexity},original_area:{original_area},downsampled_area:{downsampled_area}")
+    return downsampled_img, area_ratio
 
-plt.show()
+# 示例：读取图像并进行按固定网格大小的降采样
+binary_img = scan_convert_image('./selection/deer-2.gif')
+
+# 使用不同的固定网格大小进行降采样
+grid_sizes = [2, 4, 8, 16]  # 每个网格的大小是 2x2、4x4、8x8、16x16 像素
+for grid_size in grid_sizes:
+    downsampled_img, area_ratio = downsample_image_with_fixed_grid(binary_img, grid_size, threshold=0.5)
+    print(f'网格大小 {grid_size}x{grid_size} 像素的区域面积比: {area_ratio}')
+
+    # 显示降采样后的图像
+    plt.figure()
+    plt.imshow(downsampled_img, cmap='gray')
+    plt.title(f'Downsampled with grid size {grid_size}x{grid_size}')
+    plt.show()
