@@ -27,7 +27,8 @@ import axios from 'axios';
       return {
         images: [], 
         selectedImage: null, 
-        selectedImages:[]
+        selectedImages:[],
+        fileUrls:{}
       };
     },
   
@@ -73,22 +74,23 @@ import axios from 'axios';
             const blob = await res.blob();  
             const file = new File([blob], image.name, { type: blob.type });
 
-            
             formData.append(`file${index}`, file);
+            this.fileUrls[`file${index}`]= URL.createObjectURL(file);
           }
           
+          //console.log(this.fileUrls);
           const response = await axios.post('http://localhost:5000/api/complexity', formData, {
           headers: {'Content-Type': 'multipart/form-data'}});
 
           const rawData = response.data.data;
-          console.log(rawData);
+          //console.log(rawData);
   
           // exchange to array
           const polygonData = Object.keys(rawData).map(fileName => {
           return { [fileName]: rawData[fileName] };
           });
 
-          this.$emit('upload-success', polygonData);
+          this.$emit('upload-success', polygonData,this.fileUrls);
         } catch (error) {
           console.error('Failure', error);
         }

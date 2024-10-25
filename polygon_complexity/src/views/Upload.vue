@@ -8,7 +8,7 @@
       <li v-for="(fileName, index) in fileNames" :key="index">{{ fileName }}</li>
     </ul>
 
-    <DataVisualization :data="responseData" />
+    <DataVisualization :data="responseData" :urls="fileUrls" />
   </div>
 </template>
 
@@ -23,6 +23,7 @@ export default {
       selectedFiles: [], 
       responseData: null, 
       fileNames:[],
+      fileUrls:{}
     };
   },
   components: { 
@@ -49,7 +50,10 @@ export default {
 
        this.selectedFiles.forEach((file, index) => {
         formData.append(`file${index}`, file);  // 用 file0, file1, ... 命名每个文件
+        this.fileUrls[`file${index}`]= URL.createObjectURL(file);
       }); 
+
+      console.log(this.fileUrls)
 
       try {
         const response = await axios.post('http://localhost:5000/api/complexity', formData, {

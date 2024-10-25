@@ -12,7 +12,7 @@
     <button @click="removeLastPoint" :disabled="points.length === 0">Delete!</button>
     <button @click="sendPolygons" :disabled="polygons.length === 0">Send!</button>
 
-    <DataVisualization :data="responseData" />
+    <DataVisualization :data="responseData" :urls="fileUrls"/>
   </div>
 </template>
 
@@ -27,6 +27,7 @@ export default {
       points: [], // 保存多边形点的坐标
       polygons:[],
       responseData: null, // 存储后端返回的数据
+      fileUrls:{},
     };
   },
   components: {
@@ -114,12 +115,47 @@ export default {
         ctx.stroke();
       }
 
-      console.log(this.points);
+      
+      //console.log(this.points);
       this.polygons.push(this.points);
-      console.log(this.polygons);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //console.log(this.polygons);
+      setTimeout(()=>{
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      },500);
+
+
+      //生成多边形图片
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = 500;
+      tempCanvas.height = 500;
+      const tempCtx = tempCanvas.getContext('2d');
+
+      // 填充黑色背景
+      tempCtx.fillStyle = "black";
+      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+      // 绘制白色多边形
+      tempCtx.fillStyle = "white";
+      tempCtx.beginPath();
+
+      tempCtx.moveTo(this.points[0].x,this.points[0].y);
+      //console.log(this.points[0].x,this.points[0].y)
+      for(let i =1; i < this.points.length; i++){
+        tempCtx.lineTo(this.points[i].x,this.points[i].y);
+        //console.log(this.points[i].x,this.points[i].y);
+      }
+
+      //tempCtx.lineTo(this.points[0].x,this.points[0].y);
+      tempCtx.closePath();
+      tempCtx.fill();
+
+      tempCanvas.toBlob((blob) => {
+        // 使用URL.createObjectURL生成图片URL
+        this.fileUrls[`file${this.polygons.length - 1}`] = URL.createObjectURL(blob);
+      }, "image/png"); 
+
       this.points = []
-      console.log(this.points);
+      //console.log(this.points);
     },
 
     async sendPolygons(){
@@ -141,6 +177,7 @@ export default {
 
         // 将转换后的数据赋值给 this.responseData，以便传递给 DataVisualization 组件
         this.responseData = polygonData;
+        console.log(this.fileUrls);
       } catch (error) {
         console.error('Failure:', error);
       }

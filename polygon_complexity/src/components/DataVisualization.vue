@@ -6,6 +6,7 @@
         <tr>
           <th>polygon</th>
           <!-- 动态生成表头，展示所有方法 -->
+          <th>image</th>
           <th v-for="(method, index) in methods" :key="index" @click="sortTable(method)">
             {{ method }}
           </th>
@@ -16,6 +17,9 @@
           <!-- 显示文件序号 -->
           <td>{{ polygon.fileName }}</td>
           <!-- 动态生成表格内容，展示每个方法的复杂度值 -->
+          <td>
+            <img :src="polygon.url" alt="Polygon Image" width="100" />
+          </td>
           <td v-for="(method, i) in methods" :key="i">
             {{ getTotalComplexity(polygon.data, method) }}
           </td>
@@ -29,7 +33,8 @@
 export default {
   name: 'DataVisualization',
   props: {
-    data: Array // 传递从后端获取的多边形数据和复杂度信息
+    data: Array, // 传递从后端获取的多边形数据和复杂度信息
+    urls:Object
   },
   data() {
     return {
@@ -58,11 +63,13 @@ export default {
       return []; // 如果 this.data 无效，返回空数组，避免错误
     }
     
+    //print("url",this.urls);
     // 处理 polygons 的逻辑，类似于之前的代码
     const polygons = this.data.map(item => {
       const fileName = Object.keys(item)[0]; // 提取文件序号（例如 file0, file1）
       const data = item[fileName]; // 提取对应的复杂度数据
-      return { fileName, data };
+      const url = this.urls[fileName];
+      return { fileName, data, url };
     });
 
     if (!this.currentSortMethod) {

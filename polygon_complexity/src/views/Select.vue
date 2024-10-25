@@ -4,7 +4,7 @@
     <h2>Please select a polygon:</h2>.
     <SelectImage @upload-success="handleUploadSuccess" />
 
-    <DataVisualization :data="responseData" />
+    <DataVisualization :data="responseData" :urls="fileUrls"/>
   </div>
 </template>
 
@@ -21,11 +21,14 @@ export default {
   data() {
     return {
       responseData: null, 
+      fileUrls:{}
     };
   },
   methods: {
-    handleUploadSuccess(data) {
+    handleUploadSuccess(data,Urls) {
       this.responseData = data;
+      this.fileUrls = Urls;
+      //console.log(Urls);
     }
   }
 };
