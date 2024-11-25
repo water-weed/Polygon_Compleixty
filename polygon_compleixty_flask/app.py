@@ -11,11 +11,11 @@ import numpy as np
 app = Flask(__name__)
 cors.init_app(app)
 
-def calculate_complexity(vertex,img_url):
+def calculate_complexity(vertex,img_url,file_key):
     result = {}
-    complexity_downsamplingboudary = DownsamplingBoudary(vertex)
-    result['DownsamplingBoudary'] = complexity_downsamplingboudary
-    complexity_downsamplingarea = DownsampingArea(img_url)
+    complexity_downsamplingboudary = DownsamplingBoudary(vertex,file_key)
+    result['DownsamplingBoundary'] = complexity_downsamplingboudary
+    complexity_downsamplingarea = DownsampingArea(img_url,file_key)
     result['DownsamplingArea'] = complexity_downsamplingarea
     #print(result)
     return result
@@ -43,10 +43,10 @@ class ImageComplexityAPI(MethodView):
                    file.save(file_path)
                    vertex = GetVertex(file_path)
                    #print(vertex)
-                   complexity = calculate_complexity(vertex,file_path)
+                   complexity = calculate_complexity(vertex,file_path,file_key)
                    print(complexity)   
                    response[file_key] = complexity
-                print(response)
+                #print(response)
                 return jsonify({
                         "message": "Succeed!",
                         "data": response
@@ -83,11 +83,11 @@ class ImageComplexityAPI(MethodView):
                 vertex = np.array(vertex)
                 #print(vertex)
                 complexity = calculate_complexity(vertex,image_path)  
-                print(complexity)  
+                #print(complexity)  
                 file_key = "file" + str(i)
                 #print(file_key)
                 response[file_key] = complexity
-                print(response)
+                #print(response)
             return jsonify({
                     "message": "Succeed!",
                     "data": response

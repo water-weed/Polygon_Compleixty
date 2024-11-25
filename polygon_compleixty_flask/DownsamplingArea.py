@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
+import base64
 
 def scan_convert_image(image_path, padding=16):
     """
@@ -57,7 +58,7 @@ def downsample_image_with_fixed_grid(binary_img, grid_size, threshold=0.1):
 
     return downsampled_img, area_ratio,total_occupied_pixels,original_occupied_pixels
 
-def DownsampingArea(url):
+def DownsampingArea(url,file_key):
     binary_img = scan_convert_image(url)
 
     # grid size
@@ -65,16 +66,29 @@ def DownsampingArea(url):
 
     result = {}
     final_complexity = 0
-    for grid_size in grid_sizes:
+
+    fig, axes = plt.subplots(1, len(grid_sizes), figsize=(15, 5)) 
+    for i,grid_size in enumerate(grid_sizes):
         downsampled_img, area_ratio,total_occupied_pixels,original_occupied_pixels = downsample_image_with_fixed_grid(binary_img, grid_size, threshold=0.5)
         #print(f'网格大小 {grid_size}x{grid_size} 像素的区域面积比: {area_ratio}')
-        print(type(total_occupied_pixels))
+        #print(type(total_occupied_pixels))
         result[str(grid_size)] = {'complexity': 1-area_ratio,
                                   'total_occupied_pixels':int(total_occupied_pixels), 
                                   'original_occupied_pixels': int(original_occupied_pixels),
                                   #'downsampled_img':downsampled_img
                                   }
+        axes[i].imshow(downsampled_img, cmap='gray')
+        axes[i].set_title(f'{grid_size}x{grid_size}')
+        axes[i].axis('off')
         final_complexity = 1- area_ratio
     result['complexity'] = final_complexity
+
+    save_path = "./downsampling_area_fig/" + str(file_key)+".png"
+    plt.tight_layout()
+    plt.savefig(save_path)
+    with open(save_path,'rb') as f:
+        img_data = base64.b64encode(f.read()).decode('utf-8')
+    img_data = "data:image/png;base64," + img_data
+    result['img'] = img_data
     return result
         

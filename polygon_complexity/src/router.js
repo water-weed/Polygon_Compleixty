@@ -3,6 +3,8 @@ import Home from './views/Home.vue';
 import Select from './views/Select.vue';
 import Upload from './views/Upload.vue';
 import Draw from './views/Draw.vue';
+import DownsamplingBoundaryDetails from './views/DownsamplingBoundaryDetails.vue';
+import DownsamplingAreaDetails from './views/DownsamplingAreaDetails.vue';
 
 const routes = [
   {
@@ -24,7 +26,19 @@ const routes = [
     path: '/Draw',
     name: 'Draw',
     component: Draw
-  }
+  },
+  {
+    path: '/details/downsampingboundary/:fileName',
+    name: 'DownsamplingBoundaryDetails',
+    component: DownsamplingBoundaryDetails,
+    props: true, 
+  },
+  {
+    path: '/details/downsampingarea/:fileName',
+    name: 'DownsamplingAreaDetails',
+    component: DownsamplingAreaDetails,
+    props: true,
+  },
 ];
 
 const router = createRouter({

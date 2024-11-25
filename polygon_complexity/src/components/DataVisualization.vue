@@ -21,7 +21,12 @@
             <img :src="polygon.url" alt="Polygon Image" width="100" />
           </td>
           <td v-for="(method, i) in methods" :key="i">
+            <a
+              href="#"
+              @click.prevent="navigateWithDetails(polygon, method)"
+            >
             {{ getTotalComplexity(polygon.data, method) }}
+            </a>
           </td>
         </tr>
       </tbody>
@@ -46,6 +51,7 @@ export default {
     methods() {
     // 检查 data 数组是否存在，且至少包含一个文件
     if (this.data && this.data.length > 0) {
+      console.log(this.data);
       const firstFileData = this.data[0];
       const fileName = Object.keys(firstFileData)[0]; // 获取文件名 (如 file0, file1)
 
@@ -91,8 +97,9 @@ export default {
   methods: {
     // 获取每个方法的总 complexity
     getTotalComplexity(complexityData, method) {
-      return complexityData[method].complexity || 0; // 返回总的 complexity
+      return (parseFloat(complexityData[method]?.complexity) || 0).toFixed(2); // 返回总的 complexity
     },
+
     // 排序表格
     sortTable(method) {
       if (this.currentSortMethod === method) {
@@ -101,7 +108,23 @@ export default {
         this.currentSortMethod = method; // 设置新的排序列
         this.sortAscending = true; // 默认升序
       }
-    }
+    },
+
+    navigateWithDetails(polygon, method) {
+      // 1. 将 details 保存到 Vuex Store
+      this.$store.commit('setDetails', polygon.data[method]);
+
+      // 2. 跳转到目标路由
+      this.$router.push({
+        name: method === 'DownsamplingBoundary' ? 'DownsamplingBoundaryDetails' : 'DownsamplingAreaDetails',
+        params: {
+          fileName: polygon.fileName,
+        },
+        query: {
+          complexity: this.getTotalComplexity(polygon.data, method),
+        },
+      });
+    },
   }
 };
 </script>
