@@ -97,7 +97,7 @@ export default {
   methods: {
     // 获取每个方法的总 complexity
     getTotalComplexity(complexityData, method) {
-      return (parseFloat(complexityData[method]?.complexity) || 0).toFixed(2); // 返回总的 complexity
+      return (parseFloat(complexityData[method]?.complexity) || 0).toFixed(4); // 返回总的 complexity
     },
 
     // 排序表格
@@ -111,12 +111,23 @@ export default {
     },
 
     navigateWithDetails(polygon, method) {
-      // 1. 将 details 保存到 Vuex Store
+      const routeMap = {
+        DownsamplingBoundary:{routeName:'DownsamplingBoundaryDetails'},
+        DownsamplingArea:{routeName:'DownsamplingAreaDetails'},
+        Boundary:{routeName:'BoundaryDetails'},
+      }
+
+      const targetRoute = routeMap[method];
+
+      if (!targetRoute){
+        console.error('Unknown method:${method}');
+        return;
+      }
+
       this.$store.commit('setDetails', polygon.data[method]);
 
-      // 2. 跳转到目标路由
       this.$router.push({
-        name: method === 'DownsamplingBoundary' ? 'DownsamplingBoundaryDetails' : 'DownsamplingAreaDetails',
+        name: targetRoute.routeName,
         params: {
           fileName: polygon.fileName,
         },

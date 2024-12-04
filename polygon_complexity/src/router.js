@@ -5,6 +5,7 @@ import Upload from './views/Upload.vue';
 import Draw from './views/Draw.vue';
 import DownsamplingBoundaryDetails from './views/DownsamplingBoundaryDetails.vue';
 import DownsamplingAreaDetails from './views/DownsamplingAreaDetails.vue';
+import BoundaryDetails from './views/BoundaryDetails.vue';
 
 const routes = [
   {
@@ -37,6 +38,12 @@ const routes = [
     path: '/details/downsampingarea/:fileName',
     name: 'DownsamplingAreaDetails',
     component: DownsamplingAreaDetails,
+    props: true,
+  },
+  {
+    path: '/details/boundary/:fileName',
+    name: 'BoundaryDetails',
+    component: BoundaryDetails,
     props: true,
   },
 ];

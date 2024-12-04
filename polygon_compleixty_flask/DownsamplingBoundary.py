@@ -35,7 +35,7 @@ def DownsamplingBoudary(boundary,file_key):
     with open(save_path,'rb') as f:
         img_data = base64.b64encode(f.read()).decode('utf-8')
     img_data = "data:image/png;base64," + img_data
-    print(img_data)
+    #print(img_data)
     result['img'] = img_data
     return result
        

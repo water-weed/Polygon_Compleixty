@@ -6,6 +6,7 @@ import os
 from GetVertex import GetVertex
 from DownsamplingBoundary import DownsamplingBoudary
 from DownsamplingArea import DownsampingArea
+from Boundary import Boundary
 import numpy as np
 
 app = Flask(__name__)
@@ -17,6 +18,8 @@ def calculate_complexity(vertex,img_url,file_key):
     result['DownsamplingBoundary'] = complexity_downsamplingboudary
     complexity_downsamplingarea = DownsampingArea(img_url,file_key)
     result['DownsamplingArea'] = complexity_downsamplingarea
+    complexity_boundary = Boundary(img_url)
+    result['Boundary'] = complexity_boundary
     #print(result)
     return result
     
@@ -76,16 +79,15 @@ class ImageComplexityAPI(MethodView):
                 filename = 'file' + str(i) + '.jpg'
                 image_path = os.path.join('.\\draw', filename)
                 img.save(image_path)
+                file_key = "file" + str(i)
 
                 vertex = []
                 for points in polygon_points:
                     vertex.append([points[0],points[1]])
                 vertex = np.array(vertex)
                 #print(vertex)
-                complexity = calculate_complexity(vertex,image_path)  
+                complexity = calculate_complexity(vertex,image_path,file_key)  
                 #print(complexity)  
-                file_key = "file" + str(i)
-                #print(file_key)
                 response[file_key] = complexity
                 #print(response)
             return jsonify({
