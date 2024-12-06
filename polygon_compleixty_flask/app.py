@@ -66,7 +66,7 @@ class ImageComplexityAPI(MethodView):
             
             for i,polygon in enumerate(polygons):
                 polygon_points = [(point['x'], point['y']) for point in polygon]
-                #print(polygon_points)
+                print(polygon_points)
 
                 img_size = (500, 500)  # set image size
                 img = Image.new('RGB', img_size, (0, 0, 0)) 
