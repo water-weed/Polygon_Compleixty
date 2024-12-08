@@ -6,6 +6,8 @@ import Draw from './views/Draw.vue';
 import DownsamplingBoundaryDetails from './views/DownsamplingBoundaryDetails.vue';
 import DownsamplingAreaDetails from './views/DownsamplingAreaDetails.vue';
 import BoundaryDetails from './views/BoundaryDetails.vue';
+import TriangulationDetails from './views/TriangulationDetails.vue';
+import EntropyDetails from './views/EntropyDetails.vue';
 
 const routes = [
   {
@@ -44,6 +46,18 @@ const routes = [
     path: '/details/boundary/:fileName',
     name: 'BoundaryDetails',
     component: BoundaryDetails,
+    props: true,
+  },
+  {
+    path: '/details/triangulation/:fileName',
+    name: 'TriangulationDetails',
+    component: TriangulationDetails,
+    props: true,
+  },
+  {
+    path: '/details/entropy/:fileName',
+    name: 'EntropyDetails',
+    component: EntropyDetails,
     props: true,
   },
 ];

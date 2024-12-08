@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import base64
 
 def calculate_curvature(points):
     curvatures = []
@@ -23,18 +24,26 @@ def compute_entropy(curvatures, bins=10):
     entropy = -np.sum(probabilities * np.log2(probabilities))
     return entropy
 
-if __name__ == "__main__":
-    points = [(284.546875, 209.796875), (309.546875, 273.796875), (300.546875, 374.796875), (205.546875, 425.796875), (145.546875, 426.796875), (87.546875, 373.796875), (145.546875, 373.796875), (182.546875, 385.796875), (212.546875, 367.796875), (145.546875, 334.796875), (100.546875, 344.796875), (50.546875, 333.796875), (126.546875, 206.796875), (178.546875, 250.796875), (218.546875, 284.796875), (230.546875, 240.796875), (199.546875, 178.796875), (245.546875, 168.796875)]
-    
+def Entropy(vertex, file_key):
+    result = {}
+    points = [(v[0], v[1]) for v in vertex]
     curvatures = calculate_curvature(points)
     entropy = compute_entropy(curvatures)
-
-    print(f"Entropy:{entropy:.3f}")
+    #print(f"Entropy:{entropy:.3f}")
     
+    plt.figure()
     plt.hist(curvatures, bins=10, density=True, alpha=0.7)
     plt.title(f"Entropy of curvature = {entropy:.3f}")
     plt.xlabel("Curvature")
     plt.ylabel("Probability density")
-
     plt.tight_layout()
-    plt.show()
+    #plt.show()
+    save_path = "./entropy_fig/" + str(file_key)+".png" 
+    plt.savefig(save_path)
+    with open(save_path,'rb') as f:
+        img_data = base64.b64encode(f.read()).decode('utf-8')
+    img_data = "data:image/png;base64," + img_data
+
+    result['complexity'] = str(entropy)
+    result['img'] = img_data
+    return result

@@ -18,7 +18,7 @@ def DownsamplingBoudary(boundary,file_key):
        downsampled_length = np.sum(downsampled_distances)
        complexity = 1- (downsampled_length/original_length)
        result[str(num_points)] = {'complexity':complexity, 'original_length':original_length, 'downsampled_length':downsampled_length}
-       print(f"{num_points}:complexity:{complexity},original_length:{original_length},downsampled_length:{downsampled_length}")
+       #print(f"{num_points}:complexity:{complexity},original_length:{original_length},downsampled_length:{downsampled_length}")
        axes[i].plot(boundary[:, 0], boundary[:, 1], 'k--', label='Original Boundary (500 points)')
        axes[i].plot(downsampled_boundary[:, 0], downsampled_boundary[:, 1], 'b-', label=f'{num_points} Points')
        axes[i].scatter(downsampled_boundary[:, 0], downsampled_boundary[:, 1], label=f'{num_points} Points')

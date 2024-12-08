@@ -3,11 +3,15 @@ from flask.views import MethodView
 from extension import cors
 from PIL import Image,ImageDraw
 import os
+import numpy as np
+
 from GetVertex import GetVertex
 from DownsamplingBoundary import DownsamplingBoudary
 from DownsamplingArea import DownsampingArea
 from Boundary import Boundary
-import numpy as np
+from Triangulation import Triangulation
+from Entropy import Entropy
+
 
 app = Flask(__name__)
 cors.init_app(app)
@@ -20,6 +24,10 @@ def calculate_complexity(vertex,img_url,file_key):
     result['DownsamplingArea'] = complexity_downsamplingarea
     complexity_boundary = Boundary(img_url)
     result['Boundary'] = complexity_boundary
+    complexity_triangulation = Triangulation(vertex,file_key)
+    result['Triangulation'] = complexity_triangulation
+    complexity_entropy = Entropy(vertex, file_key)
+    result['Entropy'] = complexity_entropy
     #print(result)
     return result
     
@@ -47,7 +55,7 @@ class ImageComplexityAPI(MethodView):
                    vertex = GetVertex(file_path)
                    #print(vertex)
                    complexity = calculate_complexity(vertex,file_path,file_key)
-                   print(complexity)   
+                   #print(complexity)   
                    response[file_key] = complexity
                 #print(response)
                 return jsonify({

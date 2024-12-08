@@ -4,6 +4,7 @@ from foronoi import Voronoi,Visualizer
 import matplotlib.pyplot as plt
 import foronoi
 import triangle
+import base64
 
 # check if polygon is simple polygon
 def is_simple_polygon(polygon_edges):
@@ -58,11 +59,11 @@ def compute_delaunay_with_edges(points, polygon_edges):
     bounding_poly = foronoi.Polygon([[0, 0],[500, 0],[500, 500],[0, 500]])
     voronoi = Voronoi(bounding_poly)
     voronoi.create_diagram(points)
-    Visualizer(voronoi) \
-        .plot_sites(show_labels=False) \
-        .plot_edges(show_labels=False) \
-        .plot_vertices() \
-        .show()
+    #Visualizer(voronoi) \
+    #    .plot_sites(show_labels=False) \
+    #    .plot_edges(show_labels=False) \
+    #    .plot_vertices() \
+    #    .show()
 
     delaunay_triangles = []
     polygon = Polygon([edge[0] for edge in polygon_edges])
@@ -108,8 +109,8 @@ def calculate_t0(triangles, polygon_edges):
     return t0
 
 # draw Delaunay triangulation
-def plot_delaunay(delaunay_triangles,polygon_edges):
-    plt.figure(figsize=(6, 6))
+def plot_delaunay(delaunay_triangles,polygon_edges,file_key):
+    plt.figure()
 
     # draw boundary
     for edge in polygon_edges:
@@ -126,40 +127,19 @@ def plot_delaunay(delaunay_triangles,polygon_edges):
     plt.xlabel("X")
     plt.ylabel("Y")
     plt.grid(True)
-    plt.gca().set_aspect('equal', adjustable='box')  
-    plt.show()
+    plt.gca().set_aspect('equal', adjustable='box') 
 
-#main
-if __name__ == "__main__":
-    # vertex
-    points = [(239.41665649414062, 155.16665649414062), (283.4166564941406, 191.16665649414062),
-              (317.4166564941406, 161.16665649414062), (347.4166564941406, 121.16665649414062), 
-              (366.4166564941406, 185.16665649414062), (386.4166564941406, 243.16665649414062), 
-              (427.4166564941406, 240.16665649414062), (431.4166564941406, 237.16665649414062), 
-              (453.4166564941406, 292.1666564941406), (449.4166564941406, 344.1666564941406), 
-              (448.4166564941406, 418.1666564941406), (370.4166564941406, 451.1666564941406), 
-              (341.4166564941406, 452.1666564941406), (339.4166564941406, 397.1666564941406), 
-              (353.4166564941406, 383.1666564941406), (319.4166564941406, 352.1666564941406), 
-              (309.4166564941406, 361.1666564941406), (268.4166564941406, 425.1666564941406), 
-              (259.4166564941406, 455.1666564941406), (207.41665649414062, 469.1666564941406), 
-              (183.41665649414062, 454.1666564941406), (142.41665649414062, 411.1666564941406), 
-              (137.41665649414062, 353.1666564941406), (183.41665649414062, 318.1666564941406), 
-              (217.41665649414062, 325.1666564941406), (280.4166564941406, 299.1666564941406), 
-              (215.41665649414062, 263.1666564941406), (165.41665649414062, 291.1666564941406), 
-              (115.41665649414062, 289.1666564941406), (97.41665649414062, 223.16665649414062), 
-              (123.41665649414062, 178.16665649414062), (166.41665649414062, 162.16665649414062), 
-              (189.41665649414062, 200.16665649414062), (217.41665649414062, 189.16665649414062), 
-              (221.41665649414062, 159.16665649414062)]
+    save_path = "./triangulation_fig/" + str(file_key)+".png" 
+    plt.savefig(save_path)
+    return save_path
+    #plt.show()
+
+#Triangulation measure
+def Triangulation(vertex, file_key):
+    points = [(v[0], v[1]) for v in vertex]
+    #print(points)
     polygon_edges = []
-
-    #draw polygon
-    fig, ax = plt.subplots()
-    polygon = plt.Polygon(points, closed=True, edgecolor='black', alpha=0.7)
-    ax.add_patch(polygon)
-    ax.set_xlim(0, 500)
-    ax.set_ylim(0, 500)
-    plt.gca().set_aspect('equal', adjustable='box')  # 确保多边形比例正确
-    plt.show()
+    result = {}
 
     #get polygon edges
     for i in range(len(points)-1):
@@ -175,11 +155,20 @@ if __name__ == "__main__":
         delaunay_triangles = compute_delaunay_with_edges(points,polygon_edges)
 
         # draw triangulation
-        plot_delaunay(delaunay_triangles,polygon_edges)
+        url = plot_delaunay(delaunay_triangles,polygon_edges,file_key)
+        with open(url,'rb') as f:
+            img_data = base64.b64encode(f.read()).decode('utf-8')
+        img_data = "data:image/png;base64," + img_data
+        #print(img_data)
+        result['img'] = img_data
 
         # Calculate t0
         t0_value = calculate_t0(delaunay_triangles, polygon_edges)
-        print(f"t₀ : {t0_value}")
+        result['complexity'] = str(t0_value)
+        return result
+        #print(f"t₀ : {t0_value}")
 
     else:
         print("Polygon is not a simple polygon!")
+        return result
+

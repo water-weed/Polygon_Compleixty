@@ -115,6 +115,8 @@ export default {
         DownsamplingBoundary:{routeName:'DownsamplingBoundaryDetails'},
         DownsamplingArea:{routeName:'DownsamplingAreaDetails'},
         Boundary:{routeName:'BoundaryDetails'},
+        Triangulation:{routeName:'TriangulationDetails'},
+        Entropy:{routeName:'EntropyDetails'},
       }
 
       const targetRoute = routeMap[method];
