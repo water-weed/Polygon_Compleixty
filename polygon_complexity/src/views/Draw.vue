@@ -1,6 +1,11 @@
 <template>
-  <div>
-    <h2>Please draw a polygon</h2>
+  <div class="container">
+    <el-container>
+      <Sidebar2 />
+      <el-container class="main-content">
+        <PageHeader1 />
+
+        <el-main class="content">
     <canvas 
       ref="canvas"
       @click="drawPoint($event)" 
@@ -12,13 +17,23 @@
     <button @click="removeLastPoint" :disabled="points.length === 0">Delete!</button>
     <button @click="sendPolygons" :disabled="polygons.length === 0">Send!</button>
 
-    <DataVisualization :data="responseData" :urls="fileUrls"/>
+    <!--<DataVisualization :data="responseData" :urls="fileUrls"/>-->
+    <!--<ComplexityTable :data="responseData" :urls="fileUrls"/>-->
+      <DataTable :data="responseData" :urls="fileUrls"/>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import DataVisualization from '../components/DataVisualization.vue';
+import Sidebar2 from '../components/Sidebar2.vue';
+import PageHeader1 from '../components/PageHeader1.vue';
+import ComplexityTable from '../components/ComplexityTable.vue';
+import DataTable from '../components/DataTable.vue';
+
 
 export default {
   name: 'DrawPolygon',
@@ -31,7 +46,9 @@ export default {
     };
   },
   components: {
-    DataVisualization,
+    Sidebar2,
+    PageHeader1,
+    DataTable,
   },
   methods: {
     // 绘制点，并将其保存到 points 数组中
@@ -187,10 +204,59 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .response-data {
   margin-top: 20px;
   padding: 10px;
-  border: 1px solid #42b983;
+  border: 1px solid #fdca6b;;
   background-color: #f9f9f9;
+}
+
+.el-container {
+  height: 100%;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+  background-color: #f5f5f5;
+}
+
+/* 主内容 */
+.content {
+  padding: 20px;
+  text-align: center;
+  background-color: #f5f5f5;
+  flex-grow: 1;
+  width: 100%;
+}
+
+button{
+  border: 2px solid rgb(128, 68, 0);
+  color: rgb(128, 68, 0);
+}
+
+button:hover{
+  background-color: #fdca6b;
+  color: white;
+  border: none;
+}
+
+button:active{
+  background-color: #fdca6b;
+  color: #f9f9f9;
+  border: none;
+}
+
+.table-container {
+  max-width: 100%;
+  overflow-x: auto; /* 添加滚动条 */
 }
 </style>

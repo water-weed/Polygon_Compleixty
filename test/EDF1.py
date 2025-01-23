@@ -10,7 +10,7 @@ from scipy.spatial import cKDTree
 from collections import defaultdict
 
 
-image = Image.open('selection/file0.jpg').convert('L') #greyscale
+image = Image.open('selection/file18.jpg').convert('L') #greyscale
 image = np.array(image)
 _, binary_image = cv2.threshold(image, 128, 255, cv2.THRESH_BINARY)
 

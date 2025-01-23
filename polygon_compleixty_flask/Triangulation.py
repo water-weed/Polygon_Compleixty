@@ -149,7 +149,7 @@ def Triangulation(vertex, file_key):
 
     # check simple polygon
     if is_simple_polygon(points):
-        print("Simple polygon")
+        #print("Simple polygon")
 
         # Delaunay triangulation
         delaunay_triangles = compute_delaunay_with_edges(points,polygon_edges)

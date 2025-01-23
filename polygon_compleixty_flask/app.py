@@ -11,7 +11,9 @@ from DownsamplingArea import DownsampingArea
 from Boundary import Boundary
 from Triangulation import Triangulation
 from Entropy import Entropy
-
+from Weighted import Weighted
+from Mat import Mat
+from Edf import Edf
 
 app = Flask(__name__)
 cors.init_app(app)
@@ -28,6 +30,12 @@ def calculate_complexity(vertex,img_url,file_key):
     result['Triangulation'] = complexity_triangulation
     complexity_entropy = Entropy(vertex, file_key)
     result['Entropy'] = complexity_entropy
+    complexity_mat = Mat(img_url, file_key)
+    result['Mat'] = complexity_mat
+    complexity_edf = Edf(img_url, file_key)
+    result['Edf'] = complexity_edf
+    complexity_weighted = Weighted(vertex)
+    result['Weighted'] = complexity_weighted
     #print(result)
     return result
     

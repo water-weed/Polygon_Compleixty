@@ -108,6 +108,8 @@ import axios from 'axios';
     justify-items: center; 
     width: 100%;
     max-width: none; 
+    max-width: 100%; /* 避免内容超出页面宽度 */
+    overflow: auto; 
   }
   
   .image-item {

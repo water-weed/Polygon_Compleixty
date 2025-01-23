@@ -1,7 +1,8 @@
 <template>
   <div>
     <h2>Complexity</h2>
-    <table>
+    <button @click="exportToExcel">Export</button>
+    <table ref="table">
       <thead>
         <tr>
           <th>polygon</th>
@@ -35,6 +36,9 @@
 </template>
 
 <script>
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+
 export default {
   name: 'DataVisualization',
   props: {
@@ -51,7 +55,7 @@ export default {
     methods() {
     // 检查 data 数组是否存在，且至少包含一个文件
     if (this.data && this.data.length > 0) {
-      console.log(this.data);
+      //console.log(this.data);
       const firstFileData = this.data[0];
       const fileName = Object.keys(firstFileData)[0]; // 获取文件名 (如 file0, file1)
 
@@ -96,6 +100,22 @@ export default {
   },
   methods: {
     // 获取每个方法的总 complexity
+    exportToExcel() {
+      // 1. 获取表格数据
+      const table = this.$refs.table;
+      const workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+
+      // 2. 转换为 Excel 文件
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array"
+      });
+
+      // 3. 创建 Blob 并下载
+      const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+      saveAs(data, "table.xlsx");
+    },
+    
     getTotalComplexity(complexityData, method) {
       return (parseFloat(complexityData[method]?.complexity) || 0).toFixed(4); // 返回总的 complexity
     },
@@ -117,6 +137,9 @@ export default {
         Boundary:{routeName:'BoundaryDetails'},
         Triangulation:{routeName:'TriangulationDetails'},
         Entropy:{routeName:'EntropyDetails'},
+        Mat:{routeName:'MatDetails'},
+        Edf:{routeName:'EdfDetails'},
+        Weighted:{routeName:'WeightedDetails'},
       }
 
       const targetRoute = routeMap[method];
