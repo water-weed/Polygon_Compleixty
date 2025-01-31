@@ -39,7 +39,6 @@
 </template>
   
 <script>
-import router from '../router';
 import Sidebar1 from '../components/Sidebar1.vue';
 import PageHeader1 from '../components/PageHeader1.vue';
 

@@ -1,20 +1,37 @@
 <template>
   <div class="container">
     <el-container>
-      <Sidebar2 />
+      <Sidebar1 />
       <el-container class="main-content">
-        <PageHeader1 />
+        <PageHeader2 />
 
         <el-main class="content">
-          <input type="file" @change="handleFileUpload" multiple/> 
-    <button @click="uploadFile" :disabled="selectedFiles.length ===0">Yes</button>
+          <div class="content-wrapper">
+            <el-upload
+              ref="uploadRef"
+              action=""
+              :auto-upload="false"
+              :on-change="handleFileUpload"
+              :multiple="true"
+              :file-list="selectedFiles"
+              accept="image/*"
+              list-type="picture-card"
+            >
+            <el-icon><Plus /></el-icon>
+            </el-upload>
 
-    <ul>
-      <li v-for="(fileName, index) in fileNames" :key="index">{{ fileName }}</li>
-    </ul>
+            <div class="button-container">
+               <!-- 上传按钮 -->
+              <el-button  @click="uploadFile" :disabled="selectedFiles.length === 0">
+                Ok
+              </el-button>
+              <el-button  @click="cancelFiles" :disabled="selectedFiles.length === 0">
+                Cancel
+              </el-button>
+            </div>        
+          </div>
 
-    <DataTable :data="responseData" :urls="fileUrls"/>
-    <!--<ComplexityTable :data="responseData" :urls="fileUrls"/>-->
+          <DataTable :data="responseData" :urls="fileUrls"/>
         </el-main>
       </el-container>
     </el-container>
@@ -24,9 +41,12 @@
 <script>
 import axios from 'axios';
 import DataVisualization from '../components/DataVisualization.vue';
-import Sidebar2 from '../components/Sidebar2.vue';
-import PageHeader1 from '../components/PageHeader1.vue';
+import Sidebar1 from '../components/Sidebar1.vue';
+import PageHeader2 from '../components/PageHeader2.vue';
 import DataTable from '../components/DataTable.vue';
+import { ref } from "vue";
+import { ElMessage } from "element-plus";
+import { Plus } from "@element-plus/icons-vue";
 
 export default {
   name: 'UploadFile',
@@ -35,40 +55,56 @@ export default {
       selectedFiles: [], 
       responseData: null, 
       fileNames:[],
-      fileUrls:{}
+      fileUrls:{},
     };
   },
   components: { 
     DataVisualization,
-    Sidebar2,
-    PageHeader1,
+    Sidebar1,
+    PageHeader2,
     DataTable,
+    Plus,
   },
-  methods: {
-    handleFileUpload(event) {
-      const newFiles = Array.from(event.target.files);
-      this.selectedFiles = [...this.selectedFiles, ...newFiles];
 
-      const files = event.target.files;
+
+  methods: {
+    handleFileUpload(file, fileList) {
+      //const newFiles = Array.from(event.target.files);
+      //this.selectedFiles = [...this.selectedFiles, ...newFiles];
+
+      //const files = event.target.files;
       //this.fileNames = [];
-      for (let i = 0; i < files.length; i++) {
-        this.fileNames.push(files[i].name);
-      }
+      //for (let i = 0; i < files.length; i++) {
+        //this.fileNames.push(files[i].name);
+      //}
+      this.selectedFiles = fileList;
+      this.fileUrls = this.selectedFiles.reduce((acc, file, index) => {
+        acc[`file${index}`] = URL.createObjectURL(file.raw); // 生成本地预览 URL
+        return acc;
+        }, {});
+      //console.log(this.fileUrls);
+    },
+
+    cancelFiles(){
+      this.$refs.uploadRef.clearFiles();
     },
 
     async uploadFile() {
-      console.log(this.selectedFiles.length);
+      //console.log(this.selectedFiles.length);
       if (this.selectedFiles.length ==0) return;
 
       const formData = new FormData();
+      console.log(formData);
       formData.append('type', 'image');
+      console.log(this.selectedFiles);
 
        this.selectedFiles.forEach((file, index) => {
-        formData.append(`file${index}`, file);  // 用 file0, file1, ... 命名每个文件
-        this.fileUrls[`file${index}`]= URL.createObjectURL(file);
+        formData.append(`file${index}`, file.raw);  // 用 file0, file1, ... 命名每个文件
+        //this.fileUrls[`file${index}`]= URL.createObjectURL(file);
       }); 
-
-      console.log(this.fileUrls)
+      formData.forEach((value, key) => {
+        console.log(key, value);
+      });
 
       try {
         const response = await axios.post('http://localhost:5000/api/complexity', formData, {
@@ -95,10 +131,23 @@ export default {
       }
     },
   },
+  setup() {
+    return { Plus };
+  },
 };
 </script>
 
 <style scoped>
+ .content-wrapper {
+  max-width: 97%; /* 限制宽度 */
+  height: 900px; /* 固定高度 */
+  overflow: auto; /* 让内容滚动 */
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px; /* 与 DataTable 分开 */
+}
+
 .response-data {
   margin-top: 20px;
   padding: 10px;
@@ -127,20 +176,53 @@ export default {
   width: 100%;
 }
 
-button{
+.el-button{
   border: 2px solid rgb(128, 68, 0);
   color: rgb(128, 68, 0);
 }
 
-button:hover{
+.el-button:hover{
   background-color: #fdca6b;
   color: white;
   border: none;
 }
 
-button:active{
+.el-button:active{
   background-color: #fdca6b;
   color: #f9f9f9;
   border: none;
+}
+
+  .image-preview {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.preview-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  padding: 5px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* 居中对齐 */
+  gap: 20px; /* 设置按钮间距 */
+  margin-top: 40px;
+}
+
+::v-deep(.el-upload-list--picture-card .el-upload) {
+  width: 300px !important;
+  height: 300px !important;
+}
+
+::v-deep(.el-upload-list--picture-card .el-upload-list__item) {
+  width: 300px !important;
+  height: 300px !important;
 }
 </style>

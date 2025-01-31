@@ -2,14 +2,15 @@
 <template>
   <div class="container">
     <el-container>
-      <Sidebar2 />
+      <Sidebar1 />
       <el-container class="main-content">
-        <PageHeader1 />
+        <PageHeader2 />
 
         <el-main class="content">
-    <!--<DataVisualization :data="responseData" :urls="fileUrls"/>-->
-    <SelectImage @upload-success="handleUploadSuccess" />
-    <DataTable :data="responseData" :urls="fileUrls"/>
+          <div class="content-wrapper">
+            <SelectImage @upload-success="handleUploadSuccess" />
+          </div>
+          <DataTable :data="responseData" :urls="fileUrls"/>
         </el-main>
       </el-container>
     </el-container>
@@ -19,8 +20,8 @@
 <script>
 import DataVisualization from '../components/DataVisualization.vue';
 import SelectImage from '../components/SelectImage.vue';
-import Sidebar2 from '../components/Sidebar2.vue';
-import PageHeader1 from '../components/PageHeader1.vue';
+import Sidebar1 from '../components/Sidebar1.vue';
+import PageHeader2 from '../components/PageHeader2.vue';
 import DataTable from '../components/DataTable.vue';
 
 export default {
@@ -28,8 +29,8 @@ export default {
   components: {
     SelectImage,  
     DataVisualization,
-    Sidebar2,
-    PageHeader1,
+    Sidebar1,
+    PageHeader2,
     DataTable,
   },
   data() {
@@ -49,16 +50,25 @@ export default {
 </script>
 
 <style scoped>
+ .content-wrapper {
+  max-width: 97%; /* 限制宽度 */
+  height: 900px; /* 固定高度 */
+  overflow: auto; /* 让内容滚动 */
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px; /* 与 DataTable 分开 */
+}
+
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
 }
 
 .response-data {
   margin-top: 20px;
   padding: 10px;
-  border: 1px solid #fdca6b;;
+  border: 1px solid #fdca6b;
   background-color: #f9f9f9;
 }
 

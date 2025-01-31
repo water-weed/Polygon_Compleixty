@@ -25,7 +25,7 @@
         const routeName = this.$route.name;
         const titles = {
           Home1: "Home",
-          System: "System description",
+          SystemDescription: "System description",
           TheroyDownsampling: "Downsampling",
           TheoryBoundary:"Boundary",
           TheoryTriangulation:"Triangulation",
@@ -36,6 +36,7 @@
           Select:"Select a polygon",
           Upload:"Upload a polygon",
           Draw:"Draw a polygon",
+          System:"Polygon complexity System",
         };
         return titles[routeName] || "未命名页面";
       },

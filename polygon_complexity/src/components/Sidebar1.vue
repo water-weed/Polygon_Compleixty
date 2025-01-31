@@ -13,6 +13,10 @@
             <el-menu-item :index="'/'" @click="updateActiveIndex('/')">
               Home
             </el-menu-item>
+            <el-menu-item :index="'/systemdescription'" @click="updateActiveIndex('/systemdescription')">
+              System Description
+            </el-menu-item>
+
             <el-menu-item :index="'/system'" @click="updateActiveIndex('/system')">
               System
             </el-menu-item>
@@ -55,7 +59,7 @@
 
     watch: {
         $route(to) {
-            this.activeIndex = to.path; 
+            this.activeIndex = this.getActiveIndex(to.path); 
 
             if (to.path.startsWith('/theory')) {
                 if (!this.openSubMenus.includes('/theory')) {
@@ -66,6 +70,13 @@
     },
 
     methods: {
+      getActiveIndex(path) {
+        if (path.startsWith("/Select") || path.startsWith("/Upload") || path.startsWith('/Draw')) {
+          return "/system"; // 让 "System" 选项保持选中
+        }
+        return path; // 否则使用默认路径
+      },
+
         updateActiveIndex(path) {
             this.activeIndex = path; 
             this.$router.push(path);

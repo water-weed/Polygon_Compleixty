@@ -5,15 +5,20 @@
           v-for="(image, index) in images"
           :key="index"
           class="image-item"
-          :class="{ selected: selectedImages.includes(image) }"
+          :class="{ selected: displayImages.includes(image) }"
           @click="selectImage(image)"
         >
           <img :src="image.url" :alt="image.name" />
         </div>
     </div>
-      <button @click="confirmSelection" :disabled="selectedImages.length === 0">
-        Confirm!
+    <div class="button-container">
+      <button @click="confirmSelection" :disabled="displayImages.length === 0">
+        Ok
       </button>
+      <button @click="cancelSelection" :disabled="displayImages.length ===0">
+        Cancel
+      </button>
+    </div>
   </template>
   
   <script>
@@ -28,7 +33,8 @@ import axios from 'axios';
         images: [], 
         selectedImage: null, 
         selectedImages:[],
-        fileUrls:{}
+        fileUrls:{},
+        displayImages:[],
       };
     },
   
@@ -52,22 +58,30 @@ import axios from 'axios';
       },
   
       selectImage(image) {
-        const index = this.selectedImages.indexOf(image);
+        const index = this.displayImages.indexOf(image);
         if (index === -1) {
           // if the image hasn't been chosen
-          this.selectedImages.push(image);
+          this.displayImages.push(image);
         } else {
           // if the image has been chosen, then deselect
-          this.selectedImages.splice(index, 1);
+          this.displayImages.splice(index,1);
         }
       },
 
+      cancelSelection(){
+        this.displayImages = [];
+      },
+
       async confirmSelection() {
-        if (this.selectedImages === 0) return;
+        if (this.displayImages === 0) return;
   
         try {
           const formData = new FormData();
           formData.append('type', 'image');
+          console.log(this.displayImages);
+          console.log(this.selectedImages);
+          this.selectedImages = this.selectedImages.concat(this.displayImages);
+          console.log(this.selectedImages);
           for (let [index, image] of this.selectedImages.entries()) {
             // get Blob Data
             const res = await fetch(image.url);  
@@ -78,7 +92,6 @@ import axios from 'axios';
             this.fileUrls[`file${index}`]= URL.createObjectURL(file);
           }
           
-          //console.log(this.fileUrls);
           const response = await axios.post('http://localhost:5000/api/complexity', formData, {
           headers: {'Content-Type': 'multipart/form-data'}});
 
@@ -89,11 +102,12 @@ import axios from 'axios';
           const polygonData = Object.keys(rawData).map(fileName => {
           return { [fileName]: rawData[fileName] };
           });
-
+          console.log(this.fileUrls);
           this.$emit('upload-success', polygonData,this.fileUrls);
         } catch (error) {
           console.error('Failure', error);
         }
+        this.displayImages = [];
       }
     }
   };
@@ -104,7 +118,7 @@ import axios from 'axios';
   .image-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
-    gap: 15px; 
+    gap: 5px; 
     justify-items: center; 
     width: 100%;
     max-width: none; 
@@ -118,32 +132,37 @@ import axios from 'axios';
   }
   
   .image-item img {
-    width: 140px;
-    height: 120px;
-    object-fit: cover;
-    transition: transform 0.3s;
-  }
-  
-  .image-item:hover img {
-    transform: scale(1.1);
+    width: 100%; /* 让图片充满 div */
+    height: auto; /* 维持原始比例 */
+    max-height: 100px; /* 避免太大 */
+    object-fit: contain; /* 保证完整显示 */
   }
   
   .image-item.selected {
-    border-color: #42b983;
+    border:5px solid #fdca6b;
   }
   
-  button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #42b983;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
+  button{
+  border: 2px solid rgb(128, 68, 0);
+  color: rgb(128, 68, 0);
+}
+
+button:hover{
+  background-color: #fdca6b;
+  color: white;
+  border: none;
+}
+
+button:active{
+  background-color: #fdca6b;
+  color: #f9f9f9;
+  border: none;
+}
   
-  button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
+  .button-container {
+  display: flex;
+  justify-content: center; /* 居中对齐 */
+  gap: 20px; /* 设置按钮间距 */
+  margin-top: 15px;
+}
   </style>

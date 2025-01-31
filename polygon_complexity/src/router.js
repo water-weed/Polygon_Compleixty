@@ -19,7 +19,8 @@ import TheoryEntropy from './views/TheoryEntropy.vue';
 import TheorySkeleton from './views/TheorySkeleton.vue';
 import TheoryWeighted from './views/TheoryWeighted.vue';
 import About from './views/About.vue';
-import System from './views/System.vue';
+import SystemDescription from './views/SystemDescription.vue';
+import System from './views/System.vue'
 
 const routes = [
   {
@@ -136,6 +137,12 @@ const routes = [
     path: '/about',
     name: 'About',
     component: About,
+    props: true,
+  },
+  {
+    path: '/systemdescription',
+    name: 'SystemDescription',
+    component: SystemDescription,
     props: true,
   },
   {

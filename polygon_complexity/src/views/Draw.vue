@@ -1,25 +1,34 @@
 <template>
   <div class="container">
     <el-container>
-      <Sidebar2 />
+      <Sidebar1 />
       <el-container class="main-content">
-        <PageHeader1 />
+        <PageHeader2 :fileUrl="excelUrl"/>
 
         <el-main class="content">
-    <canvas 
-      ref="canvas"
-      @click="drawPoint($event)" 
-      width="500" 
-      height="500"
-      style="border: 1px solid black;">
-    </canvas>
-    <button @click="generatePolygon" :disabled="points.length < 3">Confirm!</button>
-    <button @click="removeLastPoint" :disabled="points.length === 0">Delete!</button>
-    <button @click="sendPolygons" :disabled="polygons.length === 0">Send!</button>
+          <div class="content-wrapper">
+            <div class="canvas-container">
+              <canvas 
+              ref="canvas"
+              @click="drawPoint($event)" 
+              width="700" 
+              height="700"
+              style="border: 1px solid black;"
+              class="canvas">
+              </canvas>
+
+              <div class="button-group">
+                <button @click="generatePolygon" :disabled="points.length < 3">Finish</button>
+                <button @click="removeLastPoint" :disabled="points.length === 0">Delete</button>
+                <button @click="clearCanvas" :disabled="points.length ===0">Clear</button>
+                <button @click="sendPolygons" :disabled="polygons.length === 0">Ok</button>
+              </div>
+            </div>
+          </div>
 
     <!--<DataVisualization :data="responseData" :urls="fileUrls"/>-->
     <!--<ComplexityTable :data="responseData" :urls="fileUrls"/>-->
-      <DataTable :data="responseData" :urls="fileUrls"/>
+      <DataTable :data="responseData" :urls="fileUrls" @file-generated="updateExcelUrl"/>
         </el-main>
       </el-container>
     </el-container>
@@ -28,10 +37,8 @@
 
 <script>
 import axios from 'axios';
-import DataVisualization from '../components/DataVisualization.vue';
-import Sidebar2 from '../components/Sidebar2.vue';
-import PageHeader1 from '../components/PageHeader1.vue';
-import ComplexityTable from '../components/ComplexityTable.vue';
+import Sidebar1 from '../components/Sidebar1.vue';
+import PageHeader2 from '../components/PageHeader2.vue';
 import DataTable from '../components/DataTable.vue';
 
 
@@ -43,14 +50,19 @@ export default {
       polygons:[],
       responseData: null, // 存储后端返回的数据
       fileUrls:{},
+      excelUrl:null,
     };
   },
   components: {
-    Sidebar2,
-    PageHeader1,
+    Sidebar1,
+    PageHeader2,
     DataTable,
   },
   methods: {
+    updateExcelUrl(url) {
+      this.excelUrl = url; // 更新父组件的 fileUrl
+      console.log("Received fileUrl from DataTable:", url);
+    },
     // 绘制点，并将其保存到 points 数组中
     drawPoint(event) {
       const canvas = this.$refs.canvas;
@@ -138,7 +150,7 @@ export default {
       //console.log(this.polygons);
       setTimeout(()=>{
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-      },500);
+      },2000);
 
 
       //生成多边形图片
@@ -174,6 +186,16 @@ export default {
       this.points = []
       //console.log(this.points);
     },
+
+    clearCanvas() {
+    const canvas = this.$refs.canvas;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // 清除整个画布
+    this.points = []; // 清空存储的点
+    this.polygons = []; // 如果有存储的多边形，也清空
+  },
 
     async sendPolygons(){
       try {
@@ -258,5 +280,37 @@ button:active{
 .table-container {
   max-width: 100%;
   overflow-x: auto; /* 添加滚动条 */
+}
+
+.content-wrapper {
+  max-width: 97%; /* 限制宽度 */
+  height: 900px; /* 固定高度 */
+  overflow: auto; /* 让内容滚动 */
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px; /* 与 DataTable 分开 */
+}
+
+.canvas-container {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  gap: 20px; /* Canvas 和按钮之间的间距 */
+  justify-content: center;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column; /* 让按钮垂直排列 */
+  gap: 20px; /* 按钮之间的间距 */
+  padding-left: 50px;
+}
+
+.button-group .el-button {
+  width: 120px; /* 统一按钮宽度 */
+}
+
+.canvas{
+  border:4px solid #fdca6b!important;
 }
 </style>
