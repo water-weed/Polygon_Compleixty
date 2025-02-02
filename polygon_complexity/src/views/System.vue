@@ -52,7 +52,7 @@
                 </el-card>
               </div>
             </div>
-            <DataTable/>
+            <DataTable :data="store.polygonResult" :urls="store.polygonUrl"/>
           </el-main>
         </el-container>
       </el-container>
@@ -63,10 +63,17 @@
   import Sidebar1 from '../components/Sidebar1.vue';
   import PageHeader2 from '../components/PageHeader2.vue';
   import DataTable from '../components/DataTable.vue';
+  import {store} from '../store/store';
   
   export default {
     name: "System",
-  
+
+    data(){
+      return{
+        store,
+      }
+    },
+
     components: {
       Sidebar1,
       PageHeader2,

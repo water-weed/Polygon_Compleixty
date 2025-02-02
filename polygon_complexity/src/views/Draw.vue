@@ -28,7 +28,6 @@
 
     <!--<DataVisualization :data="responseData" :urls="fileUrls"/>-->
     <!--<ComplexityTable :data="responseData" :urls="fileUrls"/>-->
-      <DataTable :data="responseData" :urls="fileUrls" @file-generated="updateExcelUrl"/>
         </el-main>
       </el-container>
     </el-container>
@@ -40,6 +39,7 @@ import axios from 'axios';
 import Sidebar1 from '../components/Sidebar1.vue';
 import PageHeader2 from '../components/PageHeader2.vue';
 import DataTable from '../components/DataTable.vue';
+import {store} from '../store/store';
 
 
 export default {
@@ -53,6 +53,7 @@ export default {
       excelUrl:null,
     };
   },
+
   components: {
     Sidebar1,
     PageHeader2,
@@ -155,8 +156,8 @@ export default {
 
       //生成多边形图片
       const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = 500;
-      tempCanvas.height = 500;
+      tempCanvas.width = 700;
+      tempCanvas.height = 700;
       const tempCtx = tempCanvas.getContext('2d');
 
       // 填充黑色背景
@@ -216,7 +217,11 @@ export default {
 
         // 将转换后的数据赋值给 this.responseData，以便传递给 DataVisualization 组件
         this.responseData = polygonData;
-        console.log(this.fileUrls);
+        store.polygonResult = [...store.polygonResult, ...this.responseData.slice(store.polygonResult.length)];
+        console.log(store.polygonResult);
+        store.polygonUrl = {...store.polygonUrl, ...this.fileUrls};
+        console.log(store.polygonUrl);
+        this.$router.push({ name: 'System' });
       } catch (error) {
         console.error('Failure:', error);
       }

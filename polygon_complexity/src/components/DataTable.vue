@@ -26,7 +26,7 @@
         <!-- 固定的 image 列 -->
         <el-table-column label="Image">
           <template #default="scope">
-            <img :src="scope.row.url" alt="Polygon Image" width="100" />
+            <img :src="scope.row.url" alt="Polygon Image" style="max-width: 100%; height: auto; display: block;" />
           </template>
         </el-table-column>
   
