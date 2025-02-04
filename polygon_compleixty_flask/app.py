@@ -4,6 +4,7 @@ from extension import cors
 from PIL import Image,ImageDraw
 import os
 import numpy as np
+import json
 
 from GetVertex import GetVertex
 from DownsamplingBoundary import DownsamplingBoudary
@@ -75,7 +76,51 @@ class ImageComplexityAPI(MethodView):
                 return jsonify({"error": str(e)}), 500
         
         elif data_type == "points":
-            polygons = request.json.get('points')
+            upload_type = request.form.get('type')
+            if not upload_type:
+                return jsonify({'error': 'Missing type'}), 400
+        
+            try:
+                for file_key in request.form:
+                    print(file_key)
+                    if file_key.startswith("file"):
+                       polygon = json.loads(request.form.get(file_key))
+                       print(polygon)
+                       polygon_points = [(point['x'], point['y']) for point in polygon]
+                       print(polygon_points)
+
+                       img_size = (700, 700)  # set image size
+                       img = Image.new('RGB', img_size, (0, 0, 0)) 
+                       draw = ImageDraw.Draw(img)
+            
+                    # 绘制多边形
+                       draw.polygon(polygon_points, outline="white", fill="white") 
+
+                       filename = file_key
+                       filename = filename + ".jpg"
+                       print(filename)
+                       file_path = os.path.join(".\\draw",filename)
+                       img.save(file_path)
+
+                       vertex = []
+                       for points in polygon_points:
+                           vertex.append([points[0],points[1]])
+                       vertex = np.array(vertex)
+                       print(vertex)
+                    #print(vertex)
+                       complexity = calculate_complexity(vertex,file_path,file_key)  
+                    #print(complexity)  
+                       response[file_key] = complexity
+                    #print(response)
+                return jsonify({
+                    "message": "Succeed!",
+                    "data": response
+                }), 200
+            
+            except Exception as e:
+                return jsonify({"error": str(e)}), 500
+                    
+            """polygons = request.json.get('points')
 
             if not polygons:
                 return jsonify({"error": "No Points!"}), 400
@@ -109,7 +154,7 @@ class ImageComplexityAPI(MethodView):
             return jsonify({
                     "message": "Succeed!",
                     "data": response
-                }), 200
+                }), 200"""
 
 
 image_complexity_view = ImageComplexityAPI.as_view('image_complexity_api')

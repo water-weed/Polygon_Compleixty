@@ -50,9 +50,22 @@
                     </div>
                   </div>
                 </el-card>
+                
+                <el-card class="nav-card" @click="handleExport">
+                  <div class="card-content">
+                    <div class="card-left">
+                      <span class="icon1"><font-awesome-icon :icon="['fas', 'file-export']" /></span>
+                      <span class="icon-text">Download</span>
+                    </div>
+                    <div  class="card-right">
+                      <span class = "description"> Download the complexity table!</span>
+                      <span class = 'icon2'><font-awesome-icon :icon="['far', 'circle-right']" /></span>
+                    </div>
+                  </div>
+                </el-card>
               </div>
             </div>
-            <DataTable :data="store.polygonResult" :urls="store.polygonUrl"/>
+            <DataTable :data="store.polygonResult" :urls="store.polygonUrl" @file-generated = "updateExcelUrl"/>
           </el-main>
         </el-container>
       </el-container>
@@ -71,6 +84,7 @@
     data(){
       return{
         store,
+        excelUrl:null,
       }
     },
 
@@ -83,6 +97,22 @@
     methods: {
     goTo(routeName) {
       this.$router.push({ name: routeName }); // Vue Router 路由跳转
+    },
+
+    updateExcelUrl(url) {
+      this.excelUrl = url; // 更新父组件的 fileUrl
+      //console.log("Received fileUrl from DataTable:", url);
+    },
+
+    handleExport() {
+      if (!this.excelUrl) return;
+
+      const link = document.createElement("a");
+      link.href = this.excelUrl;
+      link.setAttribute("download", "exported_data.xlsx");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     },
   },
   };
@@ -117,12 +147,13 @@
 
   .content-wrapper {
   max-width: 97%; /* 限制宽度 */
-  height: 900px; /* 固定高度 */
+  /*height: 900px;*/ /* 固定高度 */
   overflow: auto; /* 让内容滚动 */
   background: #fff;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px; /* 与 DataTable 分开 */
+  padding-bottom: 50px;
+  margin-bottom: 40px; /* 与 DataTable 分开 */
 }
   
   .introduction {

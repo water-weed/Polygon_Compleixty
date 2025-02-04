@@ -38,6 +38,7 @@
           :label="method"
           sortable
           @sort-change="handleSortChange"
+          :row-key="row => row.fileName"
         >
           <template #default="scope">
             <a
@@ -203,6 +204,9 @@ import ExcelJS from "exceljs";
     methods: {
       // 计算复杂度
       getTotalComplexity(data, method) {
+        //console.log(data);
+        //console.log(method),
+        //console.log(data[method].complexity);
         return (parseFloat(data[method].complexity ?? 0)).toFixed(4); // 如果没有值，返回 0
       },
 

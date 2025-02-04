@@ -4,7 +4,7 @@
         <div class="header-left">
             <h1>System</h1>
         </div>
-        <div class="header-right">
+        <!--<div class="header-right">
             <button class="header-btn" @click="handleSelect"  v-tippy="{content:'Select polygons from preload list', theme:'page-header', arrow: false,}">
                 <font-awesome-icon :icon="['fas', 'list-check']" />
             </button>
@@ -17,7 +17,7 @@
             <button class="header-btn" @click="handleExport" v-tippy="{content:'Export the complexity table', theme:'page-header', arrow: false,}">
                 <font-awesome-icon :icon="['fas', 'file-export']" />
             </button>
-        </div>
+        </div>-->
     </div>
 </template>
   

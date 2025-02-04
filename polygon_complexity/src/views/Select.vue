@@ -10,7 +10,6 @@
           <div class="content-wrapper">
             <SelectImage @upload-success="handleUploadSuccess" />
           </div>
-          <DataTable :data="responseData" :urls="fileUrls"/>
         </el-main>
       </el-container>
     </el-container>
@@ -23,6 +22,7 @@ import SelectImage from '../components/SelectImage.vue';
 import Sidebar1 from '../components/Sidebar1.vue';
 import PageHeader2 from '../components/PageHeader2.vue';
 import DataTable from '../components/DataTable.vue';
+import {store} from '../store/store';
 
 export default {
   name: 'Select',
@@ -43,6 +43,8 @@ export default {
     handleUploadSuccess(data,Urls) {
       this.responseData = data;
       this.fileUrls = Urls;
+      store.polygonResult = [...store.polygonResult, ...this.responseData];
+      store.polygonUrl = {...store.polygonUrl, ...this.fileUrls};
       //console.log(Urls);
     }
   }

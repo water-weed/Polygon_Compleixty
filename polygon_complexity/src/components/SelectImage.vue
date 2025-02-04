@@ -12,17 +12,18 @@
         </div>
     </div>
     <div class="button-container">
-      <button @click="confirmSelection" :disabled="displayImages.length === 0">
-        Ok
-      </button>
       <button @click="cancelSelection" :disabled="displayImages.length ===0">
         Cancel
+      </button>
+      <button @click="confirmSelection" :disabled="displayImages.length === 0">
+        Ok
       </button>
     </div>
   </template>
   
   <script>
 import axios from 'axios';
+import { store } from '../store/store';
 
   export default {
     name: 'SelectImage',
@@ -70,6 +71,9 @@ import axios from 'axios';
 
       cancelSelection(){
         this.displayImages = [];
+        this.selectedImages = [];
+        this.fileUrls = {};
+        this.$router.push({ name: 'System' });
       },
 
       async confirmSelection() {
@@ -78,18 +82,21 @@ import axios from 'axios';
         try {
           const formData = new FormData();
           formData.append('type', 'image');
-          console.log(this.displayImages);
-          console.log(this.selectedImages);
+          //console.log(this.displayImages);
+          //console.log(this.selectedImages);
           this.selectedImages = this.selectedImages.concat(this.displayImages);
-          console.log(this.selectedImages);
+          //console.log(this.selectedImages);
           for (let [index, image] of this.selectedImages.entries()) {
             // get Blob Data
             const res = await fetch(image.url);  
             const blob = await res.blob();  
             const file = new File([blob], image.name, { type: blob.type });
 
-            formData.append(`file${index}`, file);
-            this.fileUrls[`file${index}`]= URL.createObjectURL(file);
+            //formData.append(`file${index}`, file);
+            formData.append(`file${store.n}`, file);
+            //this.fileUrls[`file${index}`]= URL.createObjectURL(file);
+            this.fileUrls[`file${store.n}`]= URL.createObjectURL(file);
+            store.n++;
           }
           
           const response = await axios.post('http://localhost:5000/api/complexity', formData, {
@@ -102,12 +109,15 @@ import axios from 'axios';
           const polygonData = Object.keys(rawData).map(fileName => {
           return { [fileName]: rawData[fileName] };
           });
-          console.log(this.fileUrls);
+          //console.log(this.fileUrls);
           this.$emit('upload-success', polygonData,this.fileUrls);
+          this.$router.push({ name: 'System' });
         } catch (error) {
           console.error('Failure', error);
         }
         this.displayImages = [];
+        this.selectedImages = [];
+        this.fileUrls = {};
       }
     }
   };

@@ -18,12 +18,21 @@
               </canvas>
 
               <div class="button-group">
-                <button @click="generatePolygon" :disabled="points.length < 3">Finish</button>
-                <button @click="removeLastPoint" :disabled="points.length === 0">Delete</button>
-                <button @click="clearCanvas" :disabled="points.length ===0">Clear</button>
-                <button @click="sendPolygons" :disabled="polygons.length === 0">Ok</button>
+                <!---<button @click="generatePolygon" :disabled="points.length < 3">Finish</button>-->
+                <button @click="removeLastPoint" :disabled="points.length === 0">Delete last node</button>
+                <button @click="clearCanvas" :disabled="points.length ===0">Clear canvas</button>
+                <!--<button @click="sendPolygons" :disabled="polygons.length === 0">Ok</button>-->
               </div>
             </div>
+
+            <div class="button-container">
+               <el-button  @click="cancelPolygon">
+                Cancel
+              </el-button>
+              <el-button  @click="sendPolygons" :disabled="points.length < 3">
+                Ok
+              </el-button>
+            </div>  
           </div>
 
     <!--<DataVisualization :data="responseData" :urls="fileUrls"/>-->
@@ -51,6 +60,7 @@ export default {
       responseData: null, // 存储后端返回的数据
       fileUrls:{},
       excelUrl:null,
+      fileName:[],
     };
   },
 
@@ -64,6 +74,20 @@ export default {
       this.excelUrl = url; // 更新父组件的 fileUrl
       console.log("Received fileUrl from DataTable:", url);
     },
+
+    cancelPolygon(){
+      this.points = []; // 保存多边形点的坐标
+      this.polygons = [];
+      this.fileUrls = {};
+      this.fileName = [];
+      const canvas = this.$refs.canvas;
+      if (!canvas) return;
+
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height); 
+      this.$router.push({ name: 'System' });
+    },
+
     // 绘制点，并将其保存到 points 数组中
     drawPoint(event) {
       const canvas = this.$refs.canvas;
@@ -128,7 +152,7 @@ export default {
       }
     },
 
-    // 将 Canvas 转换为图片并发送到后端
+    // 将 Canvas 转换为图片
     async generatePolygon() {
       const canvas = this.$refs.canvas;
       const ctx = canvas.getContext('2d');
@@ -148,10 +172,11 @@ export default {
       
       //console.log(this.points);
       this.polygons.push(this.points);
+      console.log(this.polygons);
       //console.log(this.polygons);
-      setTimeout(()=>{
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      },2000);
+      //setTimeout(()=>{
+        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //},1000);
 
 
       //生成多边形图片
@@ -179,10 +204,29 @@ export default {
       tempCtx.closePath();
       tempCtx.fill();
 
-      tempCanvas.toBlob((blob) => {
+      await new Promise((resolve, reject) => {
+        tempCanvas.toBlob((blob) => {
+          if (blob) {
+            // 使用 URL.createObjectURL 生成图片 URL 并保存到 fileUrls 中
+            this.fileUrls[`file${store.n}`] = URL.createObjectURL(blob);
+            // 保存文件名到 fileName 数组中
+            this.fileName.push(`file${store.n}`);
+            store.n++;
+            resolve();
+          } else {
+            reject(new Error("Blob creation failed"));
+          }   
+        }, "image/png");
+      });
+
+      /*tempCanvas.toBlob((blob) => {
         // 使用URL.createObjectURL生成图片URL
-        this.fileUrls[`file${this.polygons.length - 1}`] = URL.createObjectURL(blob);
-      }, "image/png"); 
+        this.fileUrls[`file${store.n}`] = URL.createObjectURL(blob);
+        this.fileName.push(`file${store.n}`);
+        store.n ++;
+        //this.fileUrls[`file${store.n}`] = URL.createObjectURL(blob);
+        //store.n ++;
+      }, "image/png"); */
 
       this.points = []
       //console.log(this.points);
@@ -199,16 +243,33 @@ export default {
   },
 
     async sendPolygons(){
+      await this.generatePolygon();
+      console.log(this.polygons);
+      console.log(this.fileName);
+      const formData = new FormData();
+      formData.append('type', 'points');
+
+      this.polygons.forEach((polygon, index)=>{
+        const polygonJSON = JSON.stringify(polygon);
+        formData.append(this.fileName[index], polygonJSON); 
+      });
+
       try {
-          // 上传文件到后端
-        const response = await axios.post('http://localhost:5000/api/complexity', {
+        formData.forEach((value, key) => {
+        console.log(key, value);
+        });
+        const response = await axios.post('http://localhost:5000/api/complexity', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data', 
+          },
+        /*const response = await axios.post('http://localhost:5000/api/complexity', {
           type: 'points',  // 指定数据类型为多边形
-          points: this.polygons, // 发送多边形的坐标
+          points: this.polygons, // 发送多边形的坐标*/
       });
 
           // 存储服务器返回的数据
-          const rawData = response.data.data;
-        console.log(rawData);
+        const rawData = response.data.data;
+        //console.log(rawData);
   
         // 将后端返回的对象转换为数组格式
         const polygonData = Object.keys(rawData).map(fileName => {
@@ -217,10 +278,17 @@ export default {
 
         // 将转换后的数据赋值给 this.responseData，以便传递给 DataVisualization 组件
         this.responseData = polygonData;
-        store.polygonResult = [...store.polygonResult, ...this.responseData.slice(store.polygonResult.length)];
-        console.log(store.polygonResult);
+        store.polygonResult = [...store.polygonResult, ...this.responseData];
         store.polygonUrl = {...store.polygonUrl, ...this.fileUrls};
-        console.log(store.polygonUrl);
+        //store.polygonResult = [...store.polygonResult, ...this.responseData.slice(store.polygonResult.length)];
+        //console.log(store.polygonResult);
+        //store.polygonUrl = {...store.polygonUrl, ...this.fileUrls};
+        //console.log(store.polygonUrl);
+        this.points = []; // 保存多边形点的坐标
+        this.polygons = [];
+        this.fileUrls = {};
+        this.fileName = [];
+        this.clearCanvas();
         this.$router.push({ name: 'System' });
       } catch (error) {
         console.error('Failure:', error);
@@ -289,7 +357,6 @@ button:active{
 
 .content-wrapper {
   max-width: 97%; /* 限制宽度 */
-  height: 900px; /* 固定高度 */
   overflow: auto; /* 让内容滚动 */
   background: #fff;
   padding: 20px;
@@ -317,5 +384,12 @@ button:active{
 
 .canvas{
   border:4px solid #fdca6b!important;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* 居中对齐 */
+  gap: 20px; /* 设置按钮间距 */
+  margin-top: 40px;
 }
 </style>
