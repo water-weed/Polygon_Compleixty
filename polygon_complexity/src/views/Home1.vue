@@ -53,6 +53,7 @@ export default {
 </script>
   
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Edu+TAS+Beginner:wght@400..700&display=swap');
 .container {
   display: flex;
   flex-direction: column;
@@ -94,9 +95,11 @@ h2, h3 {
 
 /* ✅ 文字样式 */
 p {
-  font-size: 22px;
+  font-size: 30px;
   line-height: 1.6;
   color: rgb(128, 68, 0);
+  font-family: "Edu TAS Beginner", serif;
+  font-optical-sizing: auto;
 }
 </style>
   

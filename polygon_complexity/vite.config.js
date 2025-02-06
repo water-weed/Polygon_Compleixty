@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
@@ -14,5 +15,10 @@ export default defineConfig({
     },
     port: 5173, 
     open: true 
+  },
+  resolve: {
+    alias: {
+      'katex/fonts': 'https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/fonts/'
+    }
   },
 })

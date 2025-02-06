@@ -37,13 +37,30 @@ def calculate_complexity(vertex,img_url,file_key):
     result['Edf'] = complexity_edf
     complexity_weighted = Weighted(vertex)
     result['Weighted'] = complexity_weighted
-    #print(result)
+    print(result)
     return result
     
 class ImageComplexityAPI(MethodView):
 
     def get(self):
-        return jsonify({"message": "This is GET"})
+        file_key1 = "preload1"
+        file_key2 = "preload2"
+        file_path1 = "./example/file6.jpg"
+        file_path2 = "./example/file17.jpg"
+        response = {}
+
+        vertex1 = GetVertex(file_path1)
+        complexity1 = calculate_complexity(vertex1,file_path1,file_key1)
+        response[file_key1] = complexity1
+
+        vertex2 = GetVertex(file_path2)
+        complexity2 = calculate_complexity(vertex2,file_path2,file_key2)
+        response[file_key2] = complexity2
+
+        return jsonify({
+            "message": "Succeed!",
+            "data": response
+            }), 200
 
     def post(self):
         data_type = request.form.get('type') or request.json.get('type')
@@ -98,7 +115,7 @@ class ImageComplexityAPI(MethodView):
 
                        filename = file_key
                        filename = filename + ".jpg"
-                       print(filename)
+                       #print(filename)
                        file_path = os.path.join(".\\draw",filename)
                        img.save(file_path)
 

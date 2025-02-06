@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="button-container">
-      <button @click="cancelSelection" :disabled="displayImages.length ===0">
+      <button @click="cancelSelection">
         Cancel
       </button>
       <button @click="confirmSelection" :disabled="displayImages.length === 0">

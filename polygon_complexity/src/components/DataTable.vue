@@ -76,7 +76,7 @@ import ExcelJS from "exceljs";
         displayData: [], 
         displayUrls:{},
         fileUrl:null,
-        initialData: [ // 示例数据
+        /*initialData: [ // 示例数据
         {
           preload1:{
             DownsamplingBoundary: {complexity: 0.552},
@@ -101,7 +101,8 @@ import ExcelJS from "exceljs";
             Weighted:{complexity:0.3963},
           },
         },
-      ],
+      ],*/
+      initialData:[],
       initialUrls:{
         preload1: preload1Img,
         preload2: preload2Img,
@@ -112,13 +113,29 @@ import ExcelJS from "exceljs";
     mounted() {
       // 在组件挂载后初始化 visibleMethods
       //console.log("methods:", this.methods);
-      this.displayData = [...this.initialData]; // 使用初始数据填充表格
-      this.displayUrls = { ...this.initialUrls };
-      this.visibleMethods = this.methods;
+      axios.get('http://localhost:5000/api/complexity').then(
+        response =>{
+          const rawData = response.data.data;
+          //console.log(rawData);
+  
+          // 将后端返回的对象转换为数组格式
+          const polygonData = Object.keys(rawData).map(fileName => {
+            return { [fileName]: rawData[fileName] };
+          });
+          this.initialData = polygonData;
+          this.displayData = [...this.initialData]; // 使用初始数据填充表格
+          this.displayUrls = { ...this.initialUrls };
+          this.visibleMethods = this.methods;
+
+          this.$nextTick(() => {
+            this.initSortable(); // 确保拖动初始化在 DOM 渲染完成后执行
+            });
+        }
+      )
+      //this.displayData = [...this.initialData]; // 使用初始数据填充表格
+      //this.displayUrls = { ...this.initialUrls };
+      //this.visibleMethods = this.methods;
       //console.log(this.visibleMethods);
-      this.$nextTick(() => {
-        this.initSortable(); // 确保拖动初始化在 DOM 渲染完成后执行
-      });
     },
 
     watch: {

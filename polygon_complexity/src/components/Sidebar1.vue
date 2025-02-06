@@ -71,7 +71,7 @@
 
     methods: {
       getActiveIndex(path) {
-        if (path.startsWith("/Select") || path.startsWith("/Upload") || path.startsWith('/Draw')) {
+        if (path.startsWith("/Select") || path.startsWith("/Upload") || path.startsWith('/Draw') || path.startsWith("/details")) {
           return "/system"; // 让 "System" 选项保持选中
         }
         return path; // 否则使用默认路径

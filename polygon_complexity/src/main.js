@@ -14,6 +14,8 @@ import { faUpload, faDownload, faPen, faFolderOpen } from '@fortawesome/free-sol
 import tippy from 'vue-tippy';
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/animations/scale.css'
+import katex from "katex";
+import "katex/dist/katex.min.css";
 
 
 library.add(faUpload, faDownload, faPen, faFolderOpen);
@@ -37,5 +39,6 @@ app.use(tippy,{
 app.mount('#app');
 app.use(store);
 app.use(ElementPlus);
+app.use(katex);
 window.Buffer = Buffer;
 
