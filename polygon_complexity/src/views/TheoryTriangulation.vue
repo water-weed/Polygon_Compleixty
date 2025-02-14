@@ -23,14 +23,20 @@
             </figure>
             <p v-html="renderedInlineFormula(`However, for the same polygon, sometimes there will be multiple different triangulations, so $t_0$ will also be different, 
             as the Figure 2 illustrates.  `)"></p>
-            <p v-html="renderedInlineFormula(`In our system, we use Fortune algorithm to get Constrained Delaunay Triangulation (CDT) of polygon. 
-            Delaunay triangulation generates triangles with relatively uniform angles, helping to avoid the formation of elongated or narrow triangles.
-             Figure 3 illustrates a triangulation that satisfies the Constrained Delaunay Triangulation (CDT), where $t_0=2.$  `)"></p>
-          </div>
-          <figure class="image-with-caption">
-              <span><img src="../assets/triangulation2.png"></span>
+            <figure class="image-with-caption1">
+              <span><img src="../assets/triangulation2-1.jpg"></span>
+              <span><img src="../assets/triangulation2-2.png"></span>
+              <span><img src="../assets/triangulation2-3.png"></span>
               <figcaption>Figure 2</figcaption>
             </figure>
+            <p v-html="renderedInlineFormula(`In our system, we use Fortune algorithm to get Constrained Delaunay Triangulation (CDT) of polygon. 
+            Delaunay triangulation generates triangles with relatively uniform angles, helping to avoid the formation of elongated or narrow triangles.
+             Figure 3 illustrates a triangulation that satisfies the Constrained Delaunay Triangulation (CDT), where $t_0=3.$  `)"></p>
+            <figure class="image-with-caption">
+              <span><img src="../assets/triangulation2-3.png"></span>
+            <figcaption>Figure 3</figcaption>
+            </figure>
+          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -87,7 +93,6 @@ methods: {
 
 /* 主内容 */
 .content {
-  padding: 20px;
   text-align: center;
   background-color: #f5f5f5;
   flex-grow: 1;
@@ -95,7 +100,7 @@ methods: {
 }
 
 .introduction {
-  max-width: 90%;
+  width: 90%;
   margin: auto;
   text-align: left;
 }
@@ -125,12 +130,35 @@ p {
 }
 
 .image-with-caption img {
-  width: 500px; /* 根据需求调整大小 */
+  width: 40%; /* 根据需求调整大小 */
   height: auto;
   margin: 20px;
 }
 
 .image-with-caption figcaption {
+  font-size: 25px;
+  color: #666;
+  margin-top: 4px;
+  font-family: "Edu TAS Beginner", serif;
+  font-optical-sizing: auto;
+}
+
+.image-with-caption1 {
+  display: inline-block;
+  flex-direction: column;
+  align-items: center; /* 水平居中 */
+  justify-content: center; /* 仅在需要时垂直居中 */
+  text-align: center; /* 文字居中 */
+  width: 100%; /* 让其适应父级容器 */
+}
+
+.image-with-caption1 img {
+  width: 30%;
+  height: auto;
+  padding: 20px;
+}
+
+.image-with-caption1 figcaption {
   font-size: 25px;
   color: #666;
   margin-top: 4px;

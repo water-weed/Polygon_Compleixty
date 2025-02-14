@@ -37,7 +37,7 @@ def calculate_complexity(vertex,img_url,file_key):
     result['Edf'] = complexity_edf
     complexity_weighted = Weighted(vertex)
     result['Weighted'] = complexity_weighted
-    print(result)
+    #print(result)
     return result
     
 class ImageComplexityAPI(MethodView):
@@ -102,7 +102,7 @@ class ImageComplexityAPI(MethodView):
                     print(file_key)
                     if file_key.startswith("file"):
                        polygon = json.loads(request.form.get(file_key))
-                       print(polygon)
+                       #print(polygon)
                        polygon_points = [(point['x'], point['y']) for point in polygon]
                        print(polygon_points)
 
@@ -123,7 +123,7 @@ class ImageComplexityAPI(MethodView):
                        for points in polygon_points:
                            vertex.append([points[0],points[1]])
                        vertex = np.array(vertex)
-                       print(vertex)
+                       #print(vertex)
                     #print(vertex)
                        complexity = calculate_complexity(vertex,file_path,file_key)  
                     #print(complexity)  

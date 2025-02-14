@@ -56,7 +56,7 @@ def process_triangle(triangle, polygon):
 
 # Use foronoi generate Delaunay triangulation
 def compute_delaunay_with_edges(points, polygon_edges):
-    bounding_poly = foronoi.Polygon([[0, 0],[500, 0],[500, 500],[0, 500]])
+    bounding_poly = foronoi.Polygon([[0, 0],[700, 0],[700, 700],[0, 700]])
     voronoi = Voronoi(bounding_poly)
     voronoi.create_diagram(points)
     #Visualizer(voronoi) \
@@ -110,7 +110,7 @@ def calculate_t0(triangles, polygon_edges):
 
 # draw Delaunay triangulation
 def plot_delaunay(delaunay_triangles,polygon_edges,file_key):
-    plt.figure()
+    plt.figure(figsize=(6,6))
 
     # draw boundary
     for edge in polygon_edges:
@@ -127,7 +127,8 @@ def plot_delaunay(delaunay_triangles,polygon_edges,file_key):
     plt.xlabel("X")
     plt.ylabel("Y")
     plt.grid(True)
-    plt.gca().set_aspect('equal', adjustable='box') 
+    plt.axis('equal')
+    #plt.gca().set_aspect('equal', adjustable='box') 
 
     save_path = "./triangulation_fig/" + str(file_key)+".png" 
     plt.savefig(save_path)

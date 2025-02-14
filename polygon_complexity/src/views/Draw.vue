@@ -17,22 +17,33 @@
               class="canvas">
               </canvas>
 
-              <div class="button-group">
-                <!---<button @click="generatePolygon" :disabled="points.length < 3">Finish</button>-->
-                <button @click="removeLastPoint" :disabled="points.length === 0">Delete last node</button>
-                <button @click="clearCanvas" :disabled="points.length ===0">Clear canvas</button>
-                <!--<button @click="sendPolygons" :disabled="polygons.length === 0">Ok</button>-->
-              </div>
-            </div>
-
-            <div class="button-container">
+              <div class="button-container">
                <el-button  @click="cancelPolygon">
                 Cancel
               </el-button>
               <el-button  @click="sendPolygons" :disabled="points.length < 3">
                 Ok
               </el-button>
-            </div>  
+            </div> 
+
+              <!--<div class="button-group">
+                <button @click="removeLastPoint" :disabled="points.length === 0">Delete last node</button>
+                <button @click="clearCanvas" :disabled="points.length ===0">Clear canvas</button>
+              </div>-->
+            </div>
+
+            <!--<div class="button-container">
+               <el-button  @click="cancelPolygon">
+                Cancel
+              </el-button>
+              <el-button  @click="sendPolygons" :disabled="points.length < 3">
+                Ok
+              </el-button>
+            </div>  -->
+            <div class="button-group">
+              <button @click="removeLastPoint" :disabled="points.length === 0">Delete last node</button>
+              <button @click="clearCanvas" :disabled="points.length ===0">Clear canvas</button>
+            </div>
           </div>
 
     <!--<DataVisualization :data="responseData" :urls="fileUrls"/>-->
@@ -357,25 +368,28 @@ button:active{
 
 .content-wrapper {
   max-width: 97%; /* 限制宽度 */
-  overflow: auto; /* 让内容滚动 */
   background: #fff;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px; /* 与 DataTable 分开 */
+  display: flex;
+  flex-direction: row; /* 让内容垂直排列 */
+  align-items: center;
+  justify-content: center;
 }
 
 .canvas-container {
   display: flex;
   align-items: center; /* 垂直居中 */
   gap: 20px; /* Canvas 和按钮之间的间距 */
-  justify-content: center;
+  flex-direction: column;
 }
 
 .button-group {
   display: flex;
   flex-direction: column; /* 让按钮垂直排列 */
   gap: 20px; /* 按钮之间的间距 */
-  padding-left: 50px;
+  padding-left: 20px;
 }
 
 .button-group .el-button {
@@ -391,5 +405,7 @@ button:active{
   justify-content: center; /* 居中对齐 */
   gap: 20px; /* 设置按钮间距 */
   margin-top: 40px;
+  width: 100%;
+  align-items: center;
 }
 </style>

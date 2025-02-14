@@ -17,11 +17,13 @@
                     <div class="card-left">
                       <span class="icon1"><font-awesome-icon :icon="['fas', 'list-check']" /></span>
                       <span class="icon-text">Select</span>
+                      <span class = 'icon2'><font-awesome-icon :icon="['far', 'circle-right']" /></span>
                     </div>
+                    <!--
                     <div class="card-right">
                       <span class = "description"> Select polygons from a preloaded list!</span>
                       <span class = 'icon2'><font-awesome-icon :icon="['far', 'circle-right']" /></span>
-                    </div>
+                    </div>-->
                   </div>
                 </el-card>
 
@@ -30,11 +32,13 @@
                     <div class="card-left">
                       <span class="icon1"><font-awesome-icon :icon="['fas', 'upload']" /></span>
                       <span class="icon-text">Upload</span>
+                      <span class = 'icon2'><font-awesome-icon :icon="['far', 'circle-right']" /></span>
                     </div>
+                    <!--
                     <div class="card-right">
                       <span class = "description"> Upload some polygon image files!</span>
                       <span class = 'icon2'><font-awesome-icon :icon="['far', 'circle-right']" /></span>
-                    </div>
+                    </div>-->
                   </div>
                 </el-card>
 
@@ -43,11 +47,13 @@
                     <div class="card-left">
                       <span class="icon1"><font-awesome-icon :icon="['fas', 'pencil']" /></span>
                       <span class="icon-text">Draw</span>
+                      <span class = 'icon2'><font-awesome-icon :icon="['far', 'circle-right']" /></span>
                     </div>
+                    <!--
                     <div class="card-right">
                       <span class = "description"> Draw some polygons by yourself!</span>
                       <span class = 'icon2'><font-awesome-icon :icon="['far', 'circle-right']" /></span>
-                    </div>
+                    </div>-->
                   </div>
                 </el-card>
                 
@@ -56,11 +62,13 @@
                     <div class="card-left">
                       <span class="icon1"><font-awesome-icon :icon="['fas', 'file-export']" /></span>
                       <span class="icon-text">Download</span>
+                      <span class = 'icon2'><font-awesome-icon :icon="['far', 'circle-right']" /></span>
                     </div>
+                    <!--
                     <div  class="card-right">
                       <span class = "description"> Download the complexity table!</span>
                       <span class = 'icon2'><font-awesome-icon :icon="['far', 'circle-right']" /></span>
-                    </div>
+                    </div>-->
                   </div>
                 </el-card>
               </div>
@@ -143,6 +151,7 @@
     background-color: #f5f5f5;
     flex-grow: 1;
     width: 100%;
+    min-height: 950px;
   }
 
   .content-wrapper {
@@ -186,7 +195,7 @@
 }
 
 .nav-card {
-  width: 400px;
+  width: 20%;
   cursor: pointer;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   position: relative;
@@ -206,7 +215,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  font-size: 20px;
+  font-size: 40px;
   font-weight: bold;
 }
 
