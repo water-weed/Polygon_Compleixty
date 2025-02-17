@@ -25,32 +25,6 @@
       </el-container>
     </el-container>
   </div>
-    <!--<div>
-      <h1>Boundary details</h1>
-      <p><strong>filename:</strong> {{ fileName }}</p>
-      <p><strong>complexity:</strong> {{ complexity }}</p>
-      <div>{{ details }}</div>
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Length</th>
-            <th>Width</th>
-            <th>Total changes</th>
-            <th>Max changes</th>
-            <th>Complexity</th>
-          </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ details.size_length }}</td>
-                <td>{{ details.size_width }}</td>
-                <td>{{ details.total_changes }}</td>
-                <td>{{ details.max_changes }}</td>
-                <td>{{ details.complexity }}</td>
-            </tr>
-        </tbody>
-      </table>
-    </div>-->
   </template>
   
   <script>
