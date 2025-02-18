@@ -96,7 +96,7 @@ thead {
   align-items: center; /* 让文字和图片垂直居中对齐 */
   justify-content: flex-start; /* 让内容从左向右排列 */
   gap: 20px; /* 文字和图片之间的间距 */
-  height: 1020px;
+  height: 100vh;
 }
 
 .text-container {

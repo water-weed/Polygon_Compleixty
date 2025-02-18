@@ -57,7 +57,7 @@ export default {
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .el-container {
@@ -85,6 +85,7 @@ export default {
   max-width: 95%;
   margin: auto;
   text-align: left;
+  height: 100vh;
 }
 
 /* ✅ 标题样式 */

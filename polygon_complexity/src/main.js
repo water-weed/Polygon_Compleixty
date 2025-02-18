@@ -11,9 +11,9 @@ import '@fortawesome/fontawesome-free/js/all.js';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faUpload, faDownload, faPen, faFolderOpen } from '@fortawesome/free-solid-svg-icons';
-import tippy from 'vue-tippy';
+/*import tippy from 'vue-tippy';
 import 'tippy.js/dist/tippy.css'
-import 'tippy.js/animations/scale.css'
+import 'tippy.js/animations/scale.css'*/
 import katex from "katex";
 import "katex/dist/katex.min.css";
 
@@ -26,7 +26,7 @@ app.use(router);
 
 app.component('font-awesome-icon', FontAwesomeIcon);
 
-app.use(tippy,{
+/*app.use(tippy,{
     defaultProps:{
         animation: 'scale',
         placement:'bottom',
@@ -34,7 +34,7 @@ app.use(tippy,{
         //trigger: 'click' ,
         interactive: true,
     } 
-});
+});*/
 
 app.mount('#app');
 app.use(store);

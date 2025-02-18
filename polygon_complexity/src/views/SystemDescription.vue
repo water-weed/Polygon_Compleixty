@@ -25,7 +25,7 @@
 
               <!-- ✅ 右侧：图片 -->
               <el-col :span="12" >
-                <img src="../assets/sort.gif" alt="Select Polygons" class="feature-image" />
+                <img src="../assets/select.gif" alt="Select Polygons" class="feature-image" />
               </el-col>
             </el-row>
           </el-card>

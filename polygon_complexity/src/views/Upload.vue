@@ -200,7 +200,7 @@ export default {
   flex-direction: column;
   flex-grow: 1;
   width: 100%;
-  height: 1020px;
+  min-height: 100vh;
   background-color: #f5f5f5;
 }
 
