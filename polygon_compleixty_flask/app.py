@@ -83,7 +83,7 @@ class ImageComplexityAPI(MethodView):
                    complexity = calculate_complexity(vertex,file_path,file_key)
                    #print(complexity)   
                    response[file_key] = complexity
-                #print(response)
+                print(response)
                 return jsonify({
                         "message": "Succeed!",
                         "data": response
@@ -178,4 +178,4 @@ image_complexity_view = ImageComplexityAPI.as_view('image_complexity_api')
 app.add_url_rule('/api/complexity', view_func=image_complexity_view, methods=['GET', 'POST'])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host= "0.0.0.0", port=5000)
