@@ -55,8 +55,8 @@
   
 <script>
 import Sortable from 'sortablejs';
-import preload1Img from '../assets/preload_images/file6.jpg';
-import preload2Img from '../assets/preload_images/file17.jpg';
+import preload1Img from '../assets/preload_images/preload1.jpg';
+import preload2Img from '../assets/preload_images/preload2.jpg';
 import axios from "axios";
 import ExcelJS from "exceljs";
 
