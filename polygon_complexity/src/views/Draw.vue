@@ -4,7 +4,7 @@
       <Sidebar1 />
       <el-container class="main-content">
         <PageHeader2 :fileUrl="excelUrl"/>
-
+         <!--canvas-->
         <el-main class="content">
           <div class="content-wrapper">
             <div class="canvas-container">
@@ -17,6 +17,7 @@
               class="canvas">
               </canvas>
 
+              <!--button-->
               <div class="button-container">
                <el-button  @click="cancelPolygon">
                 Cancel
@@ -66,9 +67,9 @@ export default {
   name: 'DrawPolygon',
   data() {
     return {
-      points: [], // 保存多边形点的坐标
+      points: [], // coordinates of polygon points
       polygons:[],
-      responseData: null, // 存储后端返回的数据
+      responseData: null, // data from backend
       fileUrls:{},
       excelUrl:null,
       fileName:[],
@@ -82,12 +83,13 @@ export default {
   },
   methods: {
     updateExcelUrl(url) {
-      this.excelUrl = url; // 更新父组件的 fileUrl
+      this.excelUrl = url; // update the parent component's fileUrl
       console.log("Received fileUrl from DataTable:", url);
     },
 
+    //cancel function
     cancelPolygon(){
-      this.points = []; // 保存多边形点的坐标
+      this.points = []; 
       this.polygons = [];
       this.fileUrls = {};
       this.fileName = [];
@@ -99,7 +101,7 @@ export default {
       this.$router.push({ name: 'System' });
     },
 
-    // 绘制点，并将其保存到 points 数组中
+    // Draw the points and save them in the points array
     drawPoint(event) {
       const canvas = this.$refs.canvas;
       const ctx = canvas.getContext('2d');
@@ -108,43 +110,44 @@ export default {
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
 
-      // 绘制点
+      // draw points
       ctx.fillStyle = 'black';
       ctx.beginPath();
       ctx.arc(x, y, 3, 0, Math.PI * 2);
       ctx.fill();
 
-      // 保存点坐标
+      // save coordinates
       this.points.push({ x, y });
 
-      // 画线，只连接当前点和前一个点
+      // draw line, connect current points to previous points
       if (this.points.length > 1) {
-        const prevPoint = this.points[this.points.length - 2]; // 上一个点
+        const prevPoint = this.points[this.points.length - 2]; // previous points
         ctx.beginPath();
-        ctx.moveTo(prevPoint.x, prevPoint.y); // 从上一个点开始
-        ctx.lineTo(x, y); // 连接到当前点
+        ctx.moveTo(prevPoint.x, prevPoint.y); 
+        ctx.lineTo(x, y); // connect
         ctx.stroke();
       }
     },
 
+    //redraw canvas
     redrawCanvas() {
       const canvas = this.$refs.canvas;
       const ctx = canvas.getContext('2d');
 
-      // 清空 Canvas
+      //clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 重新绘制所有点和线
+      // redraw all the line and points
       for (let i = 0; i < this.points.length; i++) {
         const point = this.points[i];
 
-        // 绘制每个点
+        // draw points
         ctx.fillStyle = 'black';
         ctx.beginPath();
         ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
         ctx.fill();
 
-        // 连接每个点
+        // connect every points
         if (i > 0) {
           const prevPoint = this.points[i - 1];
           ctx.beginPath();
@@ -155,25 +158,25 @@ export default {
       }
     },
 
-    // 删除最后一个点并重新绘制 Canvas
+    // delete last points and redraw canvas
     removeLastPoint() {
       if (this.points.length > 0) {
-        this.points.pop(); // 删除最后一个点
-        this.redrawCanvas(); // 重新绘制 Canvas
+        this.points.pop(); // delete last points
+        this.redrawCanvas(); // redraw Canvas
       }
     },
 
-    // 将 Canvas 转换为图片
+    // convert canvas to images
     async generatePolygon() {
       const canvas = this.$refs.canvas;
       const ctx = canvas.getContext('2d');
 
-      // 如果有足够的点，绘制多边形最后一条边，连接最后一个点和第一个点
+      // if have enough points, draw the last line of polygons
       if (this.points.length > 2) {
         const firstPoint = this.points[0];
         const lastPoint = this.points[this.points.length - 1];
 
-        // 连接最后一个点到第一个点，形成闭合多边形
+        // connect the last point to the first point
         ctx.beginPath();
         ctx.moveTo(lastPoint.x, lastPoint.y);
         ctx.lineTo(firstPoint.x, firstPoint.y);
@@ -190,17 +193,17 @@ export default {
       //},1000);
 
 
-      //生成多边形图片
+      //generate polygon image
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = 700;
       tempCanvas.height = 700;
       const tempCtx = tempCanvas.getContext('2d');
 
-      // 填充黑色背景
+      // fill black background
       tempCtx.fillStyle = "black";
       tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
 
-      // 绘制白色多边形
+      // draw white polygon
       tempCtx.fillStyle = "white";
       tempCtx.beginPath();
 
@@ -218,9 +221,9 @@ export default {
       await new Promise((resolve, reject) => {
         tempCanvas.toBlob((blob) => {
           if (blob) {
-            // 使用 URL.createObjectURL 生成图片 URL 并保存到 fileUrls 中
+            // use URL.createObjectURL generate image URL and save in fileUrls
             this.fileUrls[`file${store.n}`] = URL.createObjectURL(blob);
-            // 保存文件名到 fileName 数组中
+            // save file name in fileName array
             this.fileName.push(`file${store.n}`);
             store.n++;
             resolve();
@@ -230,8 +233,7 @@ export default {
         }, "image/png");
       });
 
-      /*tempCanvas.toBlob((blob) => {
-        // 使用URL.createObjectURL生成图片URL
+      /*tempCanvas.toBlob((blob) => 
         this.fileUrls[`file${store.n}`] = URL.createObjectURL(blob);
         this.fileName.push(`file${store.n}`);
         store.n ++;
@@ -243,16 +245,18 @@ export default {
       //console.log(this.points);
     },
 
+    //clear canvas
     clearCanvas() {
     const canvas = this.$refs.canvas;
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // 清除整个画布
-    this.points = []; // 清空存储的点
-    this.polygons = []; // 如果有存储的多边形，也清空
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // clear canvas
+    this.points = []; // clear saved points
+    this.polygons = []; // clear save polygons
   },
 
+  //send polygon to backend
     async sendPolygons(){
       await this.generatePolygon();
       console.log(this.polygons);
@@ -274,20 +278,19 @@ export default {
             'Content-Type': 'multipart/form-data', 
           },
         /*const response = await axios.post('http://localhost:5000/api/complexity', {
-          type: 'points',  // 指定数据类型为多边形
-          points: this.polygons, // 发送多边形的坐标*/
+          type: 'points',  
+          points: this.polygons, */
       });
 
-          // 存储服务器返回的数据
+          // save data from backend
         const rawData = response.data.data;
         //console.log(rawData);
   
-        // 将后端返回的对象转换为数组格式
+        // convert object from backend to arrary type
         const polygonData = Object.keys(rawData).map(fileName => {
           return { [fileName]: rawData[fileName] };
         });
 
-        // 将转换后的数据赋值给 this.responseData，以便传递给 DataVisualization 组件
         this.responseData = polygonData;
         store.polygonResult = [...store.polygonResult, ...this.responseData];
         store.polygonUrl = {...store.polygonUrl, ...this.fileUrls};
@@ -295,11 +298,11 @@ export default {
         //console.log(store.polygonResult);
         //store.polygonUrl = {...store.polygonUrl, ...this.fileUrls};
         //console.log(store.polygonUrl);
-        this.points = []; // 保存多边形点的坐标
+        this.points = []; 
         this.polygons = [];
         this.fileUrls = {};
         this.fileName = [];
-        this.clearCanvas();
+        this.clearCanvas();//clear all data
         this.$router.push({ name: 'System' });
       } catch (error) {
         console.error('Failure:', error);
@@ -335,7 +338,7 @@ export default {
   background-color: #f5f5f5;
 }
 
-/* 主内容 */
+/* main content */
 .content {
   padding: 20px;
   text-align: center;
@@ -344,6 +347,7 @@ export default {
   width: 100%;
 }
 
+/*button style*/
 button{
   border: 2px solid rgb(128, 68, 0);
   color: rgb(128, 68, 0);
@@ -363,37 +367,38 @@ button:active{
 
 .table-container {
   max-width: 100%;
-  overflow-x: auto; /* 添加滚动条 */
+  overflow-x: auto; 
 }
 
+/*canvas style*/
 .content-wrapper {
-  max-width: 97%; /* 限制宽度 */
+  max-width: 97%; 
   background: #fff;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px; /* 与 DataTable 分开 */
+  margin-bottom: 20px; 
   display: flex;
-  flex-direction: row; /* 让内容垂直排列 */
+  flex-direction: row;
   align-items: center;
   justify-content: center;
 }
 
 .canvas-container {
   display: flex;
-  align-items: center; /* 垂直居中 */
-  gap: 20px; /* Canvas 和按钮之间的间距 */
+  align-items: center; 
+  gap: 20px; 
   flex-direction: column;
 }
 
 .button-group {
   display: flex;
-  flex-direction: column; /* 让按钮垂直排列 */
-  gap: 20px; /* 按钮之间的间距 */
+  flex-direction: column; 
+  gap: 20px;
   padding-left: 20px;
 }
 
 .button-group .el-button {
-  width: 120px; /* 统一按钮宽度 */
+  width: 120px; 
 }
 
 .canvas{
@@ -402,8 +407,8 @@ button:active{
 
 .button-container {
   display: flex;
-  justify-content: center; /* 居中对齐 */
-  gap: 20px; /* 设置按钮间距 */
+  justify-content: center; 
+  gap: 20px; 
   margin-top: 40px;
   width: 100%;
   align-items: center;

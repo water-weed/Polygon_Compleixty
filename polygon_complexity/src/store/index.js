@@ -2,18 +2,18 @@ import { createStore } from 'vuex';
 
 const store = createStore({
   state: {
-    details: null, // 存储复杂的 details 数据
+    details: null, // store details data
   },
   mutations: {
-    // 设置 details 的数据
+    // set details data
     setDetails(state, payload) {
       state.details = payload;
     },
   },
   actions: {
-    // 异步设置 details（如果需要）
+    // asynchronously set details
     async setDetailsAsync({ commit }, payload) {
-      // 模拟异步操作
+      // simulate asynchronous operations
       const processedDetails = await new Promise((resolve) => {
         setTimeout(() => resolve(payload), 1000);
       });
@@ -21,7 +21,7 @@ const store = createStore({
     },
   },
   getters: {
-    // 获取 details 数据
+    // get details values
     getDetails: (state) => state.details,
   },
 });

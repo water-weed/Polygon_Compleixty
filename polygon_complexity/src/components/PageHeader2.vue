@@ -1,4 +1,4 @@
-<!-- 📂 src/components/PageHeader.vue -->
+<!-- Page header for details page -->
 <template>
     <div class="page-header">
         <div class="header-left">
@@ -83,7 +83,7 @@ document.body.removeChild(link);
 .header-right {
   display: flex;
   align-items: center;
-  gap: 10px; /* 按钮间距 */
+  gap: 10px; 
 }
 
 .header-btn {
@@ -95,7 +95,7 @@ document.body.removeChild(link);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%; /* 圆形按钮 */
+  border-radius: 50%; 
   width: 60px;
   height: 60px;
   color: rgb(100, 53, 0);
@@ -105,12 +105,12 @@ document.body.removeChild(link);
 }
 
 .header-btn:hover {
-  background-color: #fcebcd; /* 鼠标悬停时背景色 */
+  background-color: #fcebcd; 
 }
 
 .header-btn:active {
-  background-color: #fde0aa;; /* 激活时背景色 */
-  transform: scale(0.95); /* 点击时缩小效果 */
+  background-color: #fde0aa;; 
+  transform: scale(0.95); 
 }
 
 .icon {
@@ -118,10 +118,10 @@ document.body.removeChild(link);
 }
 
 :deep(.tippy-box[data-theme~='page-header']) {
-  background-color: #a5c2be; /* Tooltip 背景色 */
-  color: #ffffff; /* Tooltip 字体颜色 */
-  border-radius: 8px; /* 圆角 */
-  font-size: 20px; /* 字体大小 */
+  background-color: #a5c2be; 
+  color: #ffffff; 
+  border-radius: 8px; 
+  font-size: 20px; 
   padding: 5px 10px;
   opacity: 0.9;
   transform: translateY(10px);

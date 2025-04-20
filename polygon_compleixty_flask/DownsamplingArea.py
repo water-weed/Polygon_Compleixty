@@ -22,13 +22,7 @@ def scan_convert_image(image_path, padding=16):
     
     return binary_img
 
-def downsample_image_with_fixed_grid(binary_img, grid_size, threshold=0.1):
-    """
-    Downsample the binary image using a fixed-size grid (e.g., 2x2 pixels) while keeping the image size unchanged.
-    :param binary_img: The input binary image.
-    :param grid_size:  The fixed size of the grid (each grid is grid_size x grid_size pixels).
-    :param threshold: The threshold for the proportion of white pixels within the grid.
-    """
+def downsample_image_with_fixed_grid(binary_img, grid_size, threshold=0.6):
     img_h, img_w = binary_img.shape
     downsampled_img = np.zeros_like(binary_img)
 
@@ -45,7 +39,7 @@ def downsample_image_with_fixed_grid(binary_img, grid_size, threshold=0.1):
             # If the proportion of white pixels is greater than the set threshold, the shape is considered to occupy the grid.
             if white_pixel_ratio > threshold:
                 downsampled_img[i:i + grid_size, j:j + grid_size] = 255
-                total_occupied_pixels += np.sum(grid_region == 255)  # 计算白色像素数量
+                total_occupied_pixels += np.sum(grid_region == 255)  # count the number of white pixels
 
     # Calculate the total number of white pixels in the original image.
     original_occupied_pixels = np.sum(binary_img == 255)
@@ -70,7 +64,6 @@ def DownsampingArea(url,file_key):
     fig, axes = plt.subplots(1, len(grid_sizes), figsize=(15, 5)) 
     for i,grid_size in enumerate(grid_sizes):
         downsampled_img, area_ratio,total_occupied_pixels,original_occupied_pixels = downsample_image_with_fixed_grid(binary_img, grid_size, threshold=0.5)
-        #print(f'网格大小 {grid_size}x{grid_size} 像素的区域面积比: {area_ratio}')
         #print(type(total_occupied_pixels))
         result[str(grid_size)] = {'complexity': 1-area_ratio,
                                   'total_occupied_pixels':int(total_occupied_pixels), 
@@ -86,6 +79,7 @@ def DownsampingArea(url,file_key):
     save_path = "./downsampling_area_fig/" + str(file_key)+".png"
     plt.tight_layout()
     plt.savefig(save_path)
+    # convert to Base64
     with open(save_path,'rb') as f:
         img_data = base64.b64encode(f.read()).decode('utf-8')
     img_data = "data:image/png;base64," + img_data

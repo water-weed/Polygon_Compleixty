@@ -31,17 +31,22 @@
   </script>
   
   <style scoped>
+  /*login page layout style*/
   .login-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 50px;
   }
+
+  /*input box style*/
   input {
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;
   }
+
+  /*button style*/
   button {
     padding: 10px 15px;
     background-color: #42b983;
@@ -49,6 +54,8 @@
     border: none;
     cursor: pointer;
   }
+
+  /*error style*/
   .error {
     color: red;
     margin-top: 10px;

@@ -1,14 +1,16 @@
-<!-- 📂 src/components/Sidebar.vue -->
+<!-- Sidebar -->
 <template>
     <el-aside width="250px" class="sidebar">
+      <!--logo and title-->
       <div class="sidebar-header">
         <img src="../assets/title.png" alt="Website Logo" class="sidebar-logo" />
         <h2 class="sidebar-title">Polygon Complexity System</h2>
       </div>
+      <!--menu-->
         <el-menu
             :default-active="activeIndex"
             :router = "true"
-            :default-openeds="openSubMenus"
+            :default-openeds="openSubMenus" 
         >
             <el-menu-item :index="'/'" @click="updateActiveIndex('/')">
               Home
@@ -51,13 +53,14 @@
     name: "Sidebar",
     data() {
       return {
-        activeIndex: this.$route.path,
-        openSubMenus: ["/theory"],
-        isTheoryOpen: true,
+        activeIndex: this.$route.path, //current activated menu item, initialized according to the route
+        openSubMenus: ["/theory"], // expand the theory submenu by default
+        isTheoryOpen: true, //the statue of submenu
       };
     },
 
     watch: {
+      //update the menu activation when the route changes
         $route(to) {
             this.activeIndex = this.getActiveIndex(to.path); 
 
@@ -70,13 +73,15 @@
     },
 
     methods: {
+      //get the index of the current route
       getActiveIndex(path) {
         if (path.startsWith("/Select") || path.startsWith("/Upload") || path.startsWith('/Draw') || path.startsWith("/details")) {
-          return "/system"; // 让 "System" 选项保持选中
+          return "/system"; // keep system selected
         }
-        return path; // 否则使用默认路径
+        return path; // otherwise use original route
       },
 
+      //update the activation status, redirect the route
         updateActiveIndex(path) {
             this.activeIndex = path; 
             this.$router.push(path);
@@ -89,6 +94,7 @@
             //console.log(this.openSubMenus);
         },
 
+        //control the submenu is expanded or collapsed
         toggleTheoryMenu(event) {
             const clickedElement = event.target;
             const theoryTitle = this.$refs.theorySubMenu.$el.querySelector('.el-sub-menu__title');
@@ -109,7 +115,7 @@
 </script>
   
 <style scoped>
-  /* 侧边栏样式 */
+  /* sidebar */
 .sidebar {
     background-color: white;
     min-height: 100vh;
@@ -121,6 +127,7 @@
     border: 2px solid #FFD992; 
 }
 
+/*logo and title */
 .sidebar-header {
   display: flex;
   flex-direction: column;
@@ -144,7 +151,8 @@
   margin-top: 10px;
   text-align: center;
 }
-  
+ 
+/*menu */
 .el-menu {
     font-size: 18px;
     transform: none;
@@ -165,6 +173,7 @@
     box-sizing: border-box;
 }
   
+/*submenu */
 :deep(.el-sub-menu__title) {
     font-size: 18px;
     background-color: white;
@@ -177,10 +186,12 @@
   box-sizing: border-box;
 }
 
+/*Theory title color when activated*/
 :deep(.active-theory-title) { 
     color: #ffd992 ;
 }
 
+/*current selected menu item */
 .el-menu-item.is-active {
     background-color: #ffd992; 
     color: white;
@@ -189,11 +200,13 @@
 
 }
 
+/*arrow*/
 :deep(.el-sub-menu__title .el-sub-menu__icon-arrow) {
   filter: var(--theory-arrow-color);
   transition: color 0.3s ease-in-out
 }
 
+/*hover */
 .el-menu-item:hover,
 :deep(.el-sub-menu__title:hover) {
     background-color: #d9f1ee; 

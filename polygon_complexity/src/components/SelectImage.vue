@@ -1,6 +1,7 @@
 <!-- src/views/Select.vue -->
 <template>
     <div class="image-gallery">
+      <!--image display-->
         <div
           v-for="(image, index) in images"
           :key="index"
@@ -11,6 +12,7 @@
           <img :src="image.url" :alt="image.name" />
         </div>
     </div>
+      <!-- button:cancel and confirm -->
     <div class="button-container">
       <button @click="cancelSelection">
         Cancel
@@ -27,37 +29,38 @@ import { store } from '../store/store';
 
   export default {
     name: 'SelectImage',
-    emits: ['upload-success'],
+    emits: ['upload-success'], // Parent component listens for upload completion events
   
     data() {
       return {
-        images: [], 
-        selectedImage: null, 
-        selectedImages:[],
-        fileUrls:{},
-        displayImages:[],
+        images: [], //image object
+        selectedImages:[], //uploaded images
+        fileUrls:{}, //file name of uploaded images
+        displayImages:[], //selected images
       };
     },
   
     created() {
-      this.loadImages(); 
+      this.loadImages(); //load all images
     },
   
     methods: {
+      //dynamically import all .gif images in the specified path
       loadImages() {
         const imageModules = import.meta.glob('../assets/select_images/*.gif');
         
         for (const path in imageModules) {
           imageModules[path]().then((module) => {
             const image = {
-              name: path.split('/').pop(), 
-              url: module.default 
+              name: path.split('/').pop(), //extract file name
+              url: module.default //image url
             };
             this.images.push(image);
           });
         }
       },
-  
+
+      //function of selecting image
       selectImage(image) {
         const index = this.displayImages.indexOf(image);
         if (index === -1) {
@@ -69,6 +72,7 @@ import { store } from '../store/store';
         }
       },
 
+      //cancel all selection and return to system page
       cancelSelection(){
         this.displayImages = [];
         this.selectedImages = [];
@@ -76,6 +80,7 @@ import { store } from '../store/store';
         this.$router.push({ name: 'System' });
       },
 
+      //confirm selection, upload image and return to system page 
       async confirmSelection() {
         if (this.displayImages === 0) return;
   
@@ -99,6 +104,7 @@ import { store } from '../store/store';
             store.n++;
           }
           
+          //connect backend
           const response = await axios.post('http://localhost:5000/api/complexity', formData, {
           headers: {'Content-Type': 'multipart/form-data'}});
 
@@ -115,6 +121,8 @@ import { store } from '../store/store';
         } catch (error) {
           console.error('Failure', error);
         }
+
+        //reset
         this.displayImages = [];
         this.selectedImages = [];
         this.fileUrls = {};
@@ -124,7 +132,7 @@ import { store } from '../store/store';
   </script>
   
   <style scoped>
-  
+  /* image grid layout */
   .image-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
@@ -132,47 +140,54 @@ import { store } from '../store/store';
     justify-items: center; 
     width: 100%;
     max-width: none; 
-    max-width: 100%; /* 避免内容超出页面宽度 */
+    max-width: 100%; 
     overflow: auto; 
   }
   
+  /*every image cell*/
   .image-item {
     border: 2px solid transparent;
     cursor: pointer;
   }
   
+  /*image*/
   .image-item img {
-    width: 100%; /* 让图片充满 div */
-    height: auto; /* 维持原始比例 */
-    max-height: 100px; /* 避免太大 */
-    object-fit: contain; /* 保证完整显示 */
+    width: 100%; 
+    height: auto; 
+    max-height: 100px; 
+    object-fit: contain; 
   }
   
+  /*selected image border*/
   .image-item.selected {
     border:5px solid #fdca6b;
   }
   
+  /*button*/
   button{
   border: 2px solid rgb(128, 68, 0);
   color: rgb(128, 68, 0);
 }
 
+/*hover button */
 button:hover{
   background-color: #fdca6b;
   color: white;
   border: none;
 }
 
+/*active button*/
 button:active{
   background-color: #fdca6b;
   color: #f9f9f9;
   border: none;
 }
-  
+
+/*button container */
   .button-container {
   display: flex;
-  justify-content: center; /* 居中对齐 */
-  gap: 20px; /* 设置按钮间距 */
+  justify-content: center; 
+  gap: 20px;
   margin-top: 15px;
 }
   </style>

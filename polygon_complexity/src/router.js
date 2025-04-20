@@ -162,9 +162,9 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = sessionStorage.getItem('authenticated') === 'true';
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/login'); // 未认证，跳转到登录页面
+    next('/login'); // unauthenticated, jump to the login page
   } else {
-    next(); // 允许访问
+    next(); // access granted
   }
 });
 

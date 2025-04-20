@@ -15,7 +15,7 @@ export default {
 </script>
 
 <style>
-/* 全局样式 */
+/* global style */
 body {
   font-family: Arial, sans-serif;
   margin: 0;

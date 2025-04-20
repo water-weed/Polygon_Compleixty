@@ -2,11 +2,14 @@
   <div class="container">
     <el-container>
       <Sidebar1 />
+
+      <!--main content-->
       <el-container class="main-content">
         <PageHeader2 />
 
         <el-main class="content">
           <div class="content-wrapper">
+            <!--upload-->
             <el-upload
               ref="uploadRef"
               action=""
@@ -20,6 +23,7 @@
             <el-icon><Plus /></el-icon>
             </el-upload>
 
+            <!--button-->
             <div class="button-container">
                <el-button  @click="cancelFiles">
                 Cancel
@@ -37,29 +41,24 @@
 
 <script>
 import axios from 'axios';
-import DataVisualization from '../components/DataVisualization.vue';
 import Sidebar1 from '../components/Sidebar1.vue';
 import PageHeader2 from '../components/PageHeader2.vue';
 import DataTable from '../components/DataTable.vue';
-import { ref } from "vue";
-import { ElMessage } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import {store} from '../store/store';
-import lodash from "lodash";
 
 
 export default {
   name: 'UploadFile',
   data() {
     return {
-      selectedFiles: [], 
-      responseData: null, 
+      selectedFiles: [], //user selected files
+      responseData: null, //response data
       fileNames:[],
-      fileUrls:{},
+      fileUrls:{},//filename ->url
     };
   },
   components: { 
-    DataVisualization,
     Sidebar1,
     PageHeader2,
     DataTable,
@@ -68,6 +67,7 @@ export default {
 
 
   methods: {
+    //update file list after file selection
     handleFileUpload(file, fileList) {
       //const newFiles = Array.from(event.target.files);
       //this.selectedFiles = [...this.selectedFiles, ...newFiles];
@@ -79,7 +79,7 @@ export default {
       //}
       this.selectedFiles = fileList;
       //this.fileUrls = this.selectedFiles.reduce((acc, file, index) => {
-        //acc[`file${index}`] = URL.createObjectURL(file.raw); // 生成本地预览 URL
+        //acc[`file${index}`] = URL.createObjectURL(file.raw); 
         //acc[`file${store.n}`] = URL.createObjectURL(file.raw);
         //this.fileNames.push(`file${store.n}`);
         //store.n ++;
@@ -88,6 +88,7 @@ export default {
       //console.log(this.fileUrls);
     },
 
+    //cancel upload, clear all data
     cancelFiles(){
       this.$refs.uploadRef.clearFiles();
       this.selectedFiles= [];
@@ -95,6 +96,7 @@ export default {
       this.$router.push({ name: 'System' });
     },
 
+    //upload file and handle response data
     async uploadFile() {
       //console.log(this.selectedFiles.length);
       if (this.selectedFiles.length ==0) return;
@@ -104,8 +106,9 @@ export default {
       formData.append('type', 'image');
       //console.log(this.selectedFiles);
 
+      //traverse the file list, append the formdata and generate the url
        this.selectedFiles.forEach((file, index) => {
-        formData.append(`file${store.n}`, file.raw);  // 用 file0, file1, ... 命名每个文件
+        formData.append(`file${store.n}`, file.raw);  // name each file file0, file1
         this.fileUrls[`file${store.n}`]= URL.createObjectURL(file.raw);
         store.n ++;
       }); 
@@ -123,12 +126,12 @@ export default {
         const rawData = response.data.data;
         console.log(rawData);
   
-        // 将后端返回的对象转换为数组格式
+        // convert the object returned by the backend into an array format
         const polygonData = Object.keys(rawData).map(fileName => {
           return { [fileName]: rawData[fileName] };
         });
 
-        // 将转换后的数据赋值给 this.responseData，以便传递给 DataVisualization 组件
+        // assign the converted dat to this response Data
         this.responseData = polygonData;
         store.polygonResult = [...store.polygonResult, ...this.responseData];
         store.polygonUrl = {...store.polygonUrl, ...this.fileUrls};
@@ -156,6 +159,7 @@ export default {
             store.polygonResult.push(polygon);*/
             
             //console.log(store.polygonResult);
+            //claer all data
             this.$refs.uploadRef.clearFiles();
             this.selectedFiles= [];
             this.fileUrls={};
@@ -174,13 +178,14 @@ export default {
 </script>
 
 <style scoped>
+/*page layout style*/
  .content-wrapper {
-  max-width: 97%; /* 限制宽度 */
-  overflow: auto; /* 让内容滚动 */
+  max-width: 97%; 
+  overflow: auto; 
   background: #fff;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  /*margin-bottom: 20px;*/ /* 与 DataTable 分开 */
+  /*margin-bottom: 20px;*/ 
   padding-bottom: 50px;
 }
 
@@ -204,7 +209,7 @@ export default {
   background-color: #f5f5f5;
 }
 
-/* 主内容 */
+/* main content */
 .content {
   padding: 20px;
   text-align: center;
@@ -213,6 +218,7 @@ export default {
   width: 100%;
 }
 
+/*button style*/
 .el-button{
   border: 2px solid rgb(128, 68, 0);
   color: rgb(128, 68, 0);
@@ -248,11 +254,12 @@ export default {
 
 .button-container {
   display: flex;
-  justify-content: center; /* 居中对齐 */
-  gap: 20px; /* 设置按钮间距 */
+  justify-content: center;
+  gap: 20px; 
   margin-top: 40px;
 }
 
+/*upload window style*/
 ::v-deep(.el-upload-list--picture-card .el-upload) {
   width: 300px !important;
   height: 300px !important;

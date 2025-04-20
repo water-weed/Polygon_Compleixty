@@ -30,6 +30,7 @@
       <Sidebar1 />
       <el-container class="main-content">
         <PageHeader2 />
+        <!--information + image-->
         <div class = 'main-content-wrapper'>
           <div class="content-wrapper">
           <div class="text-container">
@@ -37,9 +38,11 @@
           <p> <strong>Method: </strong>DownsamplingArea</p>
           <p><strong>Complexity: </strong>{{ complexity }}</p>
         </div>
+        <!--polygon image-->
         <img :src="this.url" class="imageclass">
         </div>
         <el-divider/>
+        <!--table-->
         <el-table :data="sampleRate.map(key => ({
           samplingRate: key,
           complexity: details[key]?.complexity ?? '-',
@@ -53,6 +56,7 @@
         </el-table>
         </div>
         <el-divider/>
+        <!--downsampling image-->
         <img :src="this.imgUrl" class="imageclass1">
       </el-container>
     </el-container>
@@ -60,17 +64,16 @@
 </template>
   
 <script>
-  import { mapGetters } from "vuex";
   import Sidebar1 from "../components/Sidebar1.vue";
   import PageHeader2 from "../components/PageHeader2.vue";
   import {store} from '../store/store';
-  import preload1Img from '../assets/preload_images/file6.jpg';
-  import preload2Img from '../assets/preload_images/file17.jpg';
+  import preload1Img from '../assets/preload_images/preload1.jpg';
+  import preload2Img from '../assets/preload_images/preload2.jpg';
   export default {
     data(){
       return{
-        url:null,
-        imgUrl:null,
+        url:null, //original polygon image url
+        imgUrl:null, // downsampling image url
       }
     },
 
@@ -80,20 +83,20 @@
     },
 
     watch: {
-    // 监听 details 数据的变化
+    // monitor changes in details data
     details: {
       handler(newDetails) {
         if (newDetails.img) {
-          // 释放旧的 URL
+          // release old URL
           if (this.imgUrl) {
             URL.revokeObjectURL(this.imgUrl);
           }
-          // 生成新的 URL
+          // generate new URL
           this.imgUrl = this.createImageUrl(newDetails.img);
         }
       },
-      immediate: true, // 立即执行一次，确保初始值
-      deep: true, // 深度监听
+      immediate: true, 
+      deep: true, 
     },
   },
 
@@ -102,7 +105,6 @@
       console.log(this.imgUrl);
     },
     //async mounted() {
-    // 确保 details 数据加载完成后处理 img
     //this.$nextTick(() => {
       //if (this.details.img) {
         //this.imageUrl = this.createImageUrl(this.details.img);
@@ -111,6 +113,7 @@
   //},
 
     computed:{
+      //get file name
       fileName(){
         if (this.$route.params.fileName == 'preload1'){
           this.url = preload1Img;
@@ -126,14 +129,17 @@
         return this.$route.params.fileName;
       },
 
+      //get complexity
       complexity(){
         return this.$route.query.complexity;
       },
 
+      //get details
       details(){
         return this.$store.getters.getDetails;
       },
 
+      //get sample rate
       sampleRate(){
         const keys = Object.keys(this.details);
         return keys.filter(key => key !== "complexity" && key !== "img");
@@ -141,21 +147,22 @@
     },
 
     methods:{
+      //convert Base64 to blob URL
       createImageUrl(base64) {
-      // 将 Base64 转换为 Blob
-        const byteString = atob(base64.split(",")[1]); // 去掉前缀 "data:image/png;base64,"
-        const mimeString = base64.split(",")[0].split(":")[1].split(";")[0]; // 提取 MIME 类型
+      // convert Base64 to Blob
+        const byteString = atob(base64.split(",")[1]); // remove prefix "data:image/png;base64,"
+        const mimeString = base64.split(",")[0].split(":")[1].split(";")[0]; // extract MIME type
 
-      // 创建 Uint8Array 存储二进制数据
+      // create Uint8Array to store binary data
         const byteArray = new Uint8Array(byteString.length);
         for (let i = 0; i < byteString.length; i++) {
           byteArray[i] = byteString.charCodeAt(i);
         }
 
-      // 创建 Blob 对象
+      // create Blob object
         const blob = new Blob([byteArray], { type: mimeString });
 
-      // 创建动态 URL
+      // create new URL
         const url = URL.createObjectURL(blob);
         //console.log(url);
         return url
@@ -165,6 +172,7 @@
   </script>
 
 <style scoped>
+/*table style */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -178,16 +186,17 @@ thead {
   background-color: #f4f4f4;
 }
 
+/*page layout */
 .container {
   display: flex;
-  align-items: center; /* 让文字和图片垂直居中对齐 */
-  justify-content: flex-start; /* 让内容从左向右排列 */
-  gap: 20px; /* 文字和图片之间的间距 */
+  align-items: center; 
+  justify-content: flex-start; 
+  gap: 20px; 
   height: 100vh;
 }
 
 .text-container {
-  text-align: left; /* 文字左对齐 */
+  text-align: left; 
   margin-left: 60px;
 }
 
@@ -204,7 +213,7 @@ thead {
   background-color: #f5f5f5;
 }
 
-/* 主内容 */
+/* main content */
 .content {
   padding: 20px;
   text-align: center;
@@ -235,6 +244,7 @@ p{
   color:#00443c;
 }
 
+/*polygon image style */
 .imageclass{
   width: 150px;
   display: flex;
@@ -243,35 +253,37 @@ p{
 
 .content-wrapper {
   display: flex;
-  align-items: center; /* 让文字和图片垂直居中 */
-  justify-content: flex-start; /* 文字在左，图片在右 */
-  gap: 20px; /* 控制文字和图片之间的间距 */
-  margin-bottom: 20px; /* 让图片和表格之间有间隔 */
+  align-items: center; 
+  justify-content: flex-start; 
+  gap: 20px; 
+  margin-bottom: 20px; 
   margin-top:20px;
   width: 95%;
 }
 
+/*table word color and position */
 :deep(.el-table) {
-  font-size: 14px; /* 设置表格字体大小 */
-  width: 95% !important; /* 让 el-table 占据 95% 宽度 */
+  font-size: 14px; 
+  width: 95% !important; 
   margin: 0 auto;
 }
 
 
-/* 表头字体颜色 */
+/* table header word color */
 :deep(.el-table__header-wrapper th) {
-  color: #a5c2be; /* 修改表头字体颜色 */
+  color: #a5c2be; 
 }
 
-/* 表格内容字体颜色 */
+/* table content word color */
 :deep(.el-table__body-wrapper td) {
-  color: rgb(100, 53, 0); /* 修改表格内容字体颜色 */
+  color: rgb(100, 53, 0); 
 }
 
 .main-content-wrapper{
   max-width: 95%;
 }
 
+/*downsampling image style*/
 .imageclass1{
   width: 85%;
   display: block;

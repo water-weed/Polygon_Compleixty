@@ -20,21 +20,38 @@ app = Flask(__name__)
 cors.init_app(app)
 
 def calculate_complexity(vertex,img_url,file_key):
+    #response result
     result = {}
+
+    #downsampling boundary
     complexity_downsamplingboudary = DownsamplingBoudary(vertex,file_key)
     result['DownsamplingBoundary'] = complexity_downsamplingboudary
+
+    #downsampling area
     complexity_downsamplingarea = DownsampingArea(img_url,file_key)
     result['DownsamplingArea'] = complexity_downsamplingarea
+
+    #boundary
     complexity_boundary = Boundary(img_url)
     result['Boundary'] = complexity_boundary
+
+    #triangulation
     complexity_triangulation = Triangulation(vertex,file_key)
     result['Triangulation'] = complexity_triangulation
+
+    #entropy
     complexity_entropy = Entropy(vertex, file_key)
     result['Entropy'] = complexity_entropy
+
+    #MAT
     complexity_mat = Mat(img_url, file_key)
     result['Mat'] = complexity_mat
+
+    #EDF
     complexity_edf = Edf(img_url, file_key)
     result['Edf'] = complexity_edf
+
+    #Weighted
     complexity_weighted = Weighted(vertex)
     result['Weighted'] = complexity_weighted
     #print(result)
@@ -42,6 +59,7 @@ def calculate_complexity(vertex,img_url,file_key):
     
 class ImageComplexityAPI(MethodView):
 
+    # get, return preload image result
     def get(self):
         file_key1 = "preload1"
         file_key2 = "preload2"
@@ -94,10 +112,12 @@ class ImageComplexityAPI(MethodView):
             "data": response
             }), 200
 
+    #post, return input image result
     def post(self):
         data_type = request.form.get('type') or request.json.get('type')
         #print(data_type)
         response = {}
+        #select or upload method
         if data_type == 'image':
             files = request.files
             if not files:
@@ -124,6 +144,7 @@ class ImageComplexityAPI(MethodView):
             except Exception as e:
                 return jsonify({"error": str(e)}), 500
         
+        #draw method
         elif data_type == "points":
             upload_type = request.form.get('type')
             if not upload_type:
@@ -142,7 +163,7 @@ class ImageComplexityAPI(MethodView):
                        img = Image.new('RGB', img_size, (0, 0, 0)) 
                        draw = ImageDraw.Draw(img)
             
-                    # 绘制多边形
+                    # draw polygon
                        draw.polygon(polygon_points, outline="white", fill="white") 
 
                        filename = file_key

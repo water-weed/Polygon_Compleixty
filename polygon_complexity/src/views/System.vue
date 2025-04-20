@@ -7,10 +7,11 @@
           <PageHeader2 />
           <el-main class="content">
             <div class = "content-wrapper">
-              <!-- 说明文字 -->
+              <!-- description word-->
               <h1>Welcome to polygon complexity system!</h1>
               <p>The following table shows some preload images as examples, you can choose a function to get started!</p>
 
+              <!--functionality-->
               <div class="card-container">
                 <el-card  class="nav-card" @click="goTo('Select')">
                   <div class="card-content">
@@ -73,6 +74,7 @@
                 </el-card>
               </div>
             </div>
+            <!--Data table-->
             <DataTable :data="store.polygonResult" :urls="store.polygonUrl" @file-generated = "updateExcelUrl"/>
           </el-main>
         </el-container>
@@ -104,11 +106,11 @@
 
     methods: {
     goTo(routeName) {
-      this.$router.push({ name: routeName }); // Vue Router 路由跳转
+      this.$router.push({ name: routeName }); // Vue Router route jump
     },
 
     updateExcelUrl(url) {
-      this.excelUrl = url; // 更新父组件的 fileUrl
+      this.excelUrl = url; // update father component fileUrl
       //console.log("Received fileUrl from DataTable:", url);
     },
 
@@ -127,6 +129,7 @@
   </script>
     
   <style scoped>
+  /*page layout style*/
   .container {
     display: flex;
     flex-direction: column;
@@ -145,7 +148,7 @@
     background-color: #f5f5f5;
   }
   
-  /* 主内容 */
+  /* main content */
   .content {
     padding: 20px;
     text-align: center;
@@ -156,14 +159,14 @@
   }
 
   .content-wrapper {
-  max-width: 97%; /* 限制宽度 */
-  /*height: 900px;*/ /* 固定高度 */
-  overflow: auto; /* 让内容滚动 */
+  max-width: 97%; 
+  /*height: 900px;*/ 
+  overflow: auto; 
   background: #fff;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding-bottom: 50px;
-  margin-bottom: 40px; /* 与 DataTable 分开 */
+  margin-bottom: 40px; 
 }
   
   .introduction {
@@ -173,6 +176,7 @@
   }
   
  
+  /*title style*/
   h1 {
     margin-bottom: 10px;
     color: #00443c;
@@ -180,6 +184,7 @@
     padding-left: 40px;
   }
   
+  /*word style*/
   p {
     font-size: 25px;
     line-height: 1.6;
@@ -188,6 +193,7 @@
     padding-left: 40px;
   }
 
+  /*functionality card style*/
   .card-container {
   display: flex;
   gap: 16px;
@@ -227,17 +233,20 @@
   font-size: 20px;
 }
 
+/*functionality icon*/
 .icon1 {
   font-size: 30px;
   color: #00443c;
 }
 
+/*arrow*/
 .icon2{
   font-size: 35px;
   color:#00443c;
   margin-left: auto;
 }
 
+/*text*/
 .icon-text{
   color: #00443c;
   font-size: 28px;

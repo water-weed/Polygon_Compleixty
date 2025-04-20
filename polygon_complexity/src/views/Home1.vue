@@ -72,7 +72,7 @@ export default {
   background-color: #f5f5f5;
 }
 
-/* 主内容 */
+/* main content */
 .content {
   padding: 20px;
   text-align: center;
@@ -88,13 +88,13 @@ export default {
   height: 100vh;
 }
 
-/* ✅ 标题样式 */
+/* title style */
 h2, h3 {
   margin-bottom: 10px;
   color: #00443c;
 }
 
-/* ✅ 文字样式 */
+/* word style */
 p {
   font-size: 30px;
   line-height: 1.6;

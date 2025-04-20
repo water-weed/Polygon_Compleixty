@@ -1,4 +1,4 @@
-<!-- 📂 src/components/PageHeader.vue -->
+<!-- Page header for Home, System, Theory, About page -->
 <template>
     <div class="page-header">
       <h1>{{ pageTitle }}</h1>
@@ -11,7 +11,7 @@
 
     data() {
       return {
-        currentFunction: "Select Function", // 当前选中的功能
+        currentFunction: "Select Function", // current data input method
         menuItems: [
           { name: "Select", label: "Select Polygon" },
           { name: "Upload", label: "Upload Polygon" },
@@ -20,6 +20,7 @@
       };
     },
 
+    //navigation table
     computed: {
       pageTitle() {
         const routeName = this.$route.name;
@@ -38,7 +39,7 @@
           Draw:"Draw a polygon",
           System:"Polygon complexity System",
         };
-        return titles[routeName] || "未命名页面";
+        return titles[routeName] || "Unnamed page";
       },
     },
 };

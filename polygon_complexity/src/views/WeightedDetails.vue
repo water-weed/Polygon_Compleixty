@@ -29,6 +29,7 @@
       <Sidebar1 />
       <el-container class="main-content">
         <PageHeader2 />
+        <!--information + image-->
         <div class = 'main-content-wrapper'>
           <div class="content-wrapper">
           <div class="text-container">
@@ -36,9 +37,11 @@
           <p> <strong>Method: </strong>Weighted</p>
           <p><strong>Complexity: </strong>{{ complexity }}</p>
         </div>
+        <!--polygon image-->
         <img :src="this.url" class="imageclass">
         </div>
         <el-divider/>
+        <!--table-->
         <el-table :data="[details]" border>
           <el-table-column prop="ampl" label="Amplitude of the vibration"></el-table-column>
           <el-table-column prop="conv" label="Deviation from the convex hull"></el-table-column>
@@ -56,8 +59,8 @@
   import Sidebar1 from "../components/Sidebar1.vue";
   import PageHeader2 from "../components/PageHeader2.vue";
   import {store} from '../store/store';
-  import preload1Img from '../assets/preload_images/file6.jpg';
-  import preload2Img from '../assets/preload_images/file17.jpg';
+  import preload1Img from '../assets/preload_images/preload1.jpg';
+  import preload2Img from '../assets/preload_images/preload2.jpg';
 
   export default {
     components:{
@@ -67,11 +70,12 @@
 
     data(){
       return{
-        url:null,
+        url:null,//original polygon image url
       }
     },
     
     computed:{
+      //get file name
       fileName(){
         if (this.$route.params.fileName == 'preload1'){
           this.url = preload1Img;
@@ -87,10 +91,12 @@
         return this.$route.params.fileName;
       },
 
+      //get complexity
       complexity(){
         return this.$route.query.complexity;
       },
 
+      //get details
       details(){
         return this.$store.getters.getDetails;
       },
@@ -101,6 +107,7 @@
   </script>
 
 <style scoped>
+/*table style*/
 table {
   width: 100%;
   border-collapse: collapse;
@@ -114,16 +121,17 @@ thead {
   background-color: #f4f4f4;
 }
 
+/*page layout */
 .container {
   display: flex;
-  align-items: center; /* 让文字和图片垂直居中对齐 */
-  justify-content: flex-start; /* 让内容从左向右排列 */
-  gap: 20px; /* 文字和图片之间的间距 */
-  min-height: 100vh;
+  align-items: center; 
+  justify-content: flex-start; 
+  gap: 20px;
+  height: 100vh;
 }
 
 .text-container {
-  text-align: left; /* 文字左对齐 */
+  text-align: left; 
   margin-left: 60px;
 }
 
@@ -140,7 +148,7 @@ thead {
   background-color: #f5f5f5;
 }
 
-/* 主内容 */
+/* main content */
 .content {
   padding: 20px;
   text-align: center;
@@ -171,6 +179,7 @@ p{
   color:#00443c;
 }
 
+/*polygon image style */
 .imageclass{
   width: 150px;
   display: flex;
@@ -179,29 +188,30 @@ p{
 
 .content-wrapper {
   display: flex;
-  align-items: center; /* 让文字和图片垂直居中 */
-  justify-content: flex-start; /* 文字在左，图片在右 */
-  gap: 20px; /* 控制文字和图片之间的间距 */
-  margin-bottom: 20px; /* 让图片和表格之间有间隔 */
+  align-items: center; 
+  justify-content: flex-start; 
+  gap: 20px; 
+  margin-bottom: 20px; 
   margin-top:20px;
   width: 95%;
 }
 
+/*table word color and position */
 :deep(.el-table) {
-  font-size: 14px; /* 设置表格字体大小 */
-  width: 95% !important; /* 让 el-table 占据 95% 宽度 */
+  font-size: 14px; 
+  width: 95% !important; 
   margin: 0 auto;
 }
 
 
-/* 表头字体颜色 */
+/* table header word color */
 :deep(.el-table__header-wrapper th) {
-  color: #a5c2be; /* 修改表头字体颜色 */
+  color: #a5c2be;
 }
 
-/* 表格内容字体颜色 */
+/* table content word color */
 :deep(.el-table__body-wrapper td) {
-  color: rgb(100, 53, 0); /* 修改表格内容字体颜色 */
+  color: rgb(100, 53, 0); 
 }
 
 .main-content-wrapper{

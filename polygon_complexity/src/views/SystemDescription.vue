@@ -11,11 +11,11 @@
         <el-main class="content">
           <el-main>
       <el-row :gutter="30">
-        <!-- 📌 Feature 1: Select Predefined Polygons -->
+        <!-- method 1: select-->
         <el-col :span="24" class="feature-col">
           <el-card class="feature-card">
             <el-row align="middle">
-              <!-- ✅ 左侧：文字 -->
+              <!-- left:text -->
               <el-col :span="12">
                 <div class="feature-text">
                   <h3>Select </h3>
@@ -23,7 +23,7 @@
                 </div>
               </el-col>
 
-              <!-- ✅ 右侧：图片 -->
+              <!-- right:image -->
               <el-col :span="12" >
                 <img src="../assets/select.gif" alt="Select Polygons" class="feature-image" />
               </el-col>
@@ -31,33 +31,31 @@
           </el-card>
         </el-col>
 
-        <!-- 📌 Feature 2: Upload Your Own -->
+        <!-- method 2: upload -->
         <el-col :span="24" class="feature-col">
           <el-card class="feature-card">
             <el-row align="middle">
-              <!-- ✅ 左侧：文字 -->
+              <!-- left:image -->
               <el-col :span="12">
                 <img src="../assets/upload.gif" alt="Upload Polygons" class="feature-image" />
               </el-col>
 
+              <!--right:text-->
               <el-col :span="12">
                 <div class="feature-text">
                   <h3>Upload</h3>
                   <p>Directly upload an image of a polygon.</p>
                 </div>
-              </el-col>
-
-              <!-- ✅ 右侧：图片 -->
-              
+              </el-col>          
             </el-row>
           </el-card>
         </el-col>
 
-        <!-- 📌 Feature 3: Draw Your Own -->
+        <!-- method 3: draw -->
         <el-col :span="24" class="feature-col">
           <el-card class="feature-card">
             <el-row align="middle">
-              <!-- ✅ 左侧：文字 -->
+              <!-- left：text -->
               <el-col :span="12">
                 <div class="feature-text">
                   <h3>Draw </h3>
@@ -65,7 +63,7 @@
                 </div>
               </el-col>
 
-              <!-- ✅ 右侧：图片 -->
+              <!-- right：image -->
               <el-col :span="12">
                 <img src="../assets/draw.gif" alt="Draw Polygons" class="feature-image" />
               </el-col>
@@ -81,7 +79,6 @@
   </template>
   
 <script>
-import router from '../router';
 import Sidebar1 from '../components/Sidebar1.vue';
 import PageHeader1 from '../components/PageHeader1.vue';
 
@@ -96,6 +93,7 @@ export default {
 </script>
   
 <style scoped>
+/*page layout style*/
 .container {
   display: flex;
   flex-direction: column;
@@ -114,7 +112,7 @@ export default {
   background-color: #f5f5f5;
 }
 
-/* 主内容 */
+/* main content */
 .content {
   padding: 20px;
   text-align: center;
@@ -130,13 +128,13 @@ export default {
   color: #333;
 }
 
-/* ✅ 让 `el-card` 更加美观 */
+/*el-card style */
 .feature-card {
   background-color: white;
   padding: 20px;
 }
 
-/* ✅ 文字样式 */
+/* text style*/
 .feature-text {
   text-align: left;
   padding-left: 20px;
@@ -153,7 +151,7 @@ export default {
   line-height: 1.6;
 }
 
-/* ✅ 右侧图片 */
+/* image style */
 .feature-image {
   width: 100%;
   max-width: 800px;

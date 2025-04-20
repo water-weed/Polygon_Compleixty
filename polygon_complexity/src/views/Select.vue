@@ -6,6 +6,7 @@
       <el-container class="main-content">
         <PageHeader2 />
 
+        <!--Select window-->
         <el-main class="content">
           <div class="content-wrapper">
             <SelectImage @upload-success="handleUploadSuccess" />
@@ -17,7 +18,6 @@
 </template>
 
 <script>
-import DataVisualization from '../components/DataVisualization.vue';
 import SelectImage from '../components/SelectImage.vue';
 import Sidebar1 from '../components/Sidebar1.vue';
 import PageHeader2 from '../components/PageHeader2.vue';
@@ -28,7 +28,6 @@ export default {
   name: 'Select',
   components: {
     SelectImage,  
-    DataVisualization,
     Sidebar1,
     PageHeader2,
     DataTable,
@@ -40,6 +39,7 @@ export default {
     };
   },
   methods: {
+    //operation of handling response data
     handleUploadSuccess(data,Urls) {
       this.responseData = data;
       this.fileUrls = Urls;
@@ -52,14 +52,15 @@ export default {
 </script>
 
 <style scoped>
+/*Page layout*/
  .content-wrapper {
-  max-width: 97%; /* 限制宽度 */
-  height: 900px; /* 固定高度 */
-  overflow: auto; /* 让内容滚动 */
+  max-width: 97%; 
+  height: 900px; 
+  overflow: auto; 
   background: #fff;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px; /* 与 DataTable 分开 */
+  margin-bottom: 20px; 
 }
 
 .container {
@@ -86,7 +87,7 @@ export default {
   background-color: #f5f5f5;
 }
 
-/* 主内容 */
+/* main content*/
 .content {
   padding: 20px;
   text-align: center;

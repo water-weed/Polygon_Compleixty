@@ -34,10 +34,8 @@
 </template>
 
 <script>
-import router from '../router';
 import Sidebar1 from '../components/Sidebar1.vue';
 import PageHeader1 from '../components/PageHeader1.vue';
-import { computed } from 'vue';
 import katex from "katex";
 import "katex/dist/katex.min.css";
 
@@ -53,12 +51,14 @@ components: {
 },
 
 methods: {
+  //inline formula
   renderedInlineFormula(inlineText) {
       return inlineText.replace(/\$(.*?)\$/g, (match, formula) =>
         katex.renderToString(formula, { throwOnError: false, displayMode: false })
       );
     },
 
+    //block formula
     renderedBlockFormula(blockFormula) {
       return katex.renderToString(blockFormula, { throwOnError: false, displayMode: true });
     }
@@ -68,6 +68,7 @@ methods: {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Edu+TAS+Beginner:wght@400..700&display=swap');
+/*page layout sytle*/
 .container {
   display: flex;
   flex-direction: column;
@@ -86,7 +87,7 @@ methods: {
   background-color: #f5f5f5;
 }
 
-/* 主内容 */
+/* main content */
 .content {
   padding: 20px;
   text-align: center;
@@ -101,13 +102,13 @@ methods: {
   text-align: left;
 }
 
-/* ✅ 标题样式 */
+/* title style */
 h2, h3 {
   margin-bottom: 10px;
   color: #00443c;
 }
 
-/* ✅ 文字样式 */
+/* text style*/
 p {
   font-size: 30px;
   line-height: 1.6;
@@ -116,17 +117,18 @@ p {
   font-optical-sizing: auto;
 }
 
+/*image style*/
 .image-with-caption {
   display: inline-block;
   flex-direction: column;
-  align-items: center; /* 水平居中 */
-  justify-content: center; /* 仅在需要时垂直居中 */
-  text-align: center; /* 文字居中 */
-  width: 100%; /* 让其适应父级容器 */
+  align-items: center; 
+  justify-content: center; 
+  text-align: center; 
+  width: 100%; 
 }
 
 .image-with-caption img {
-  width: 200px; /* 根据需求调整大小 */
+  width: 200px; 
   height: auto;
   margin: 20px;
 }
@@ -139,6 +141,7 @@ p {
   font-optical-sizing: auto;
 }
 
+/*formula style*/
 :deep(.katex){
   font-family: "Edu TAS Beginner", serif!important;
   font-optical-sizing: auto!important;
